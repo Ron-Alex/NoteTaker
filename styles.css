@@ -1,0 +1,105 @@
+.docBody
+{
+    margin: 0 5% 0 5%;
+}
+
+.bodyDarkMode
+{
+    background-color: #212121;
+    color: white;
+}
+
+.headingOne{
+    font-family: "Merriweather", serif;
+    font-weight: 500;
+    letter-spacing: 0.1ch;
+}
+
+.textInput
+{
+    width: 70vw;
+    height: 30px;
+}
+
+.searchBar, .textInput {
+    /* color: #fff; */
+    font-size: 0.9rem;
+    background-color: transparent;
+    box-sizing: border-box;
+    padding-inline: 0.5em;
+    padding-block: 0.7em;
+    border-radius: 0.2em;
+    letter-spacing: 0.1ch;
+    border: 1px solid;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.bodyDarkMode .searchBar
+{
+    color: white;
+}
+
+.bodyDarkMode .textInput
+{
+    color: white;
+}
+
+input:focus
+{
+    outline: none;
+}
+
+.navbar{
+    display: flex;
+    align-items: center;
+    width: 100vw;
+}
+
+.searchBar
+{
+    justify-self: center;
+    position: fixed;
+    height: 30px;
+    /* margin-left: 50%; */
+    right: 15%;
+}
+
+.switch
+{
+    /* margin-left: 5%; */
+    position: fixed;
+    right: 5%;
+}
+
+.addedNote
+{
+    font-family: "Space Grotesk", sans-serif;
+    transition: all 0.2s ease;
+}
+
+.addedNote:hover
+{
+    background-color: lightgray;
+    cursor: pointer;
+    transform: scale(1.01);
+    /* transform: translateY(-5px); */
+}
+
+.bodyDarkMode .addedNote:hover
+{
+    background-color: #666666;
+}
+
+.hoveredOver{
+    background-color: #666666;
+}
+
+#editor{
+    height: max-content;
+    border-radius: 5px;
+}
+
+/* 
+#editor .bodyDarkMode{
+    color: white;
+} */

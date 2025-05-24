@@ -1,0 +1,31 @@
+<html>
+    <head>
+        <title>Yuh</title>
+        <link rel="stylesheet" type="text/css" href="./styles.css">
+        <link rel="stylesheet" type="text/css" href="./btnStyles.css">
+        <link rel="stylesheet" type="text/css" href="./toggleStyles.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" /> <!--CSS For Quil-->
+    </head>
+    <body class="docBody">
+        <div>
+            <div class="navbar">
+                <h1 class="headingOne">NoteTaker</h1>
+                <input class="searchBar" placeholder="Search">
+                <label class="switch">
+                    <input class="themeToggle checkbox" type="checkbox" value="0">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="mainContent">
+                <button type="button" class="addButton">Add Note</button>
+            </div>
+            <div id="editor">
+            </div>
+        </div>
+        <script src="./script.js" defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+    </body>
+</html>
