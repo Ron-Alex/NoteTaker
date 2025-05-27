@@ -75,6 +75,8 @@ input:focus
 {
     font-family: "Space Grotesk", sans-serif;
     transition: all 0.2s ease;
+    /* width: 80vw; */
+    word-wrap: break-word;
 }
 
 .addedNote:hover
