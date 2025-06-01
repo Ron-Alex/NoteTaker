@@ -5,6 +5,15 @@ const mainContent = document.body.getElementsByClassName("mainContent")[0];
 const searchBar = document.getElementsByClassName("searchBar")[0];
 const darkModeToggle = document.getElementsByClassName("themeToggle")[0];
 const mainPage = document.getElementsByClassName("mainPage")[0];
+const editorForLoading = (saveData) => {
+    const tempDiv = document.createElement("div");
+    const tempQuill = new Quill(tempDiv, {
+        theme: 'snow'
+    });
+    tempQuill.setContents(saveData);
+    const HTMLData = tempQuill.getSemanticHTML();
+    return HTMLData;
+};
 const createSubmitButton = () => {
     const submitButton = document.createElement("button");
     submitButton.setAttribute("class", "submitButton");
@@ -35,15 +44,25 @@ const addJSONNote = (saveData) => {
     // allNotes[allNotes.length - 1].setAttribute("draggable", "true");
 };
 const addNotePrep = (saveData, htmlData) => {
-    console.log(htmlData);
-    console.log(saveData);
     // const parsedData = JSON.parse(saveData);
+    console.log(saveData);
     if (saveData.ops[0].insert === "\n") {
         alert("Input cannot be empty");
         return;
     }
     const noteArea = document.createElement("div");
     noteArea.setAttribute("draggable", "true");
+    console.log(saveData);
+    const localNote = localStorage.getItem("notes");
+    if (!localNote) {
+        localStorage.setItem("noteNum", "0");
+    }
+    let noteNumStr = localStorage.getItem("noteNum");
+    let noteNum = parseInt(noteNumStr);
+    saveData.storedID = '' + noteNum;
+    noteArea.setAttribute("data-id", saveData.storedID);
+    noteNum += 1;
+    localStorage.setItem("noteNum", '' + noteNum);
     mainContent.appendChild(noteArea);
     noteArea.innerHTML += htmlData;
     noteArea.setAttribute("class", "addedNote");
@@ -62,25 +81,25 @@ const loadingJSONNote = () => {
     else {
         return;
     }
-    const tempDiv = document.createElement("div");
-    document.body.appendChild(tempDiv);
-    const tempQuill = new Quill(tempDiv, {
-        theme: 'snow'
-    });
+    // const tempDiv = document.createElement("div");
+    // document.body.appendChild(tempDiv);
+    // const tempQuill = new Quill(tempDiv, {
+    //     theme: 'snow'
+    // });
     for (let i = 0; i < delta.length; i++) {
         const deltaObj = JSON.parse(delta[i]);
+        // console.log(delta[i]);
         const ops = deltaObj.ops;
-        tempQuill.setContents(ops);
-        const JSONElement = tempQuill.getSemanticHTML();
+        const noteNum = localStorage.getItem("noteNum");
+        // tempQuill.setContents(ops);
+        const JSONElement = editorForLoading(ops);
         const newNoteArea = document.createElement("div");
         newNoteArea.setAttribute("class", "addedNote");
         newNoteArea.setAttribute("draggable", "true");
+        newNoteArea.setAttribute("data-id", '' + deltaObj.storedID);
         mainContent.appendChild(newNoteArea);
         newNoteArea.innerHTML += JSONElement;
     }
-    document.body.removeChild(tempDiv);
-    const addedToolbar = document.getElementsByClassName("ql-toolbar");
-    document.body.removeChild(addedToolbar[addedToolbar.length - 1]);
     // const allNotes = mainContent.querySelectorAll("p");
     // for(let i = 0; i < allNotes.length; i++)
     // {
@@ -88,8 +107,9 @@ const loadingJSONNote = () => {
     //     allNotes[i].setAttribute("draggable", "true");
     // }
 };
-let quill; /* = new Quill('#editor', {
-    theme: 'snow'
+//initialize quill editor and add it to #editor
+/* = new Quill('#editor', {
+   theme: 'snow'
 });*/
 const setTheme = () => {
     const themeNum = localStorage.getItem("theme");
@@ -183,6 +203,11 @@ function addInput() {
     textEditor.focus();
     //     const htmlData = newQuill.getSemanticHTML();
     // const saveData: object = newQuill.getContents();
+    // textEditor.addEventListener("paste", (e) => {
+    //     e.preventDefault();
+    //     let text = e.clipboardData?.getData("text/plain");
+    // } )
+    const localNum = localStorage.getItem("noteNum");
     mainPage.getElementsByClassName("submitButton")[0].addEventListener("click", () => {
         const htmlData = newQuill.getSemanticHTML();
         const saveData = newQuill.getContents();
@@ -213,10 +238,25 @@ mainPage.addEventListener("click", (e) => {
 mainContent.addEventListener("click", function (e) {
     const funcTarg = e.target;
     const parentNote = funcTarg.closest(".addedNote");
-    console.log(parentNote);
     if (!parentNote) {
         return;
     }
+    const localNote = localStorage.getItem("notes");
+    if (!localNote) {
+        return;
+    }
+    const localNoteParsed = JSON.parse(localNote);
+    const selectedDivIndex = parentNote.getAttribute('data-id');
+    console.log(localNoteParsed);
+    console.log(selectedDivIndex);
+    // localNoteParsed.splice(selectedDivIndex, 1);
+    for (let i = 0; i < localNoteParsed.length; i++) {
+        const indivNote = JSON.parse(localNoteParsed[i]);
+        if (selectedDivIndex === indivNote.storedID) {
+            localNoteParsed.splice(i, 1);
+        }
+    }
+    localStorage.setItem("notes", JSON.stringify(localNoteParsed));
     parentNote.remove();
 });
 searchBar.addEventListener("input", function (e) {
