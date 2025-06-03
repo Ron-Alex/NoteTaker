@@ -1,3 +1,4 @@
+//all functions for the NoteList including Drag and Drop
 import { Note } from "../models/Note.js";
 
 export class NoteList{

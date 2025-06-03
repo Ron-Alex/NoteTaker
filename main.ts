@@ -1,34 +1,28 @@
 import { StorageService } from "./services/StorageService.js";
 import { NoteService } from "./services/NoteService.js";
-import { NoteEditor } from "./services/NoteEditor.js";
 import { NoteList } from "./services/NoteList.js";
 import { BackGroundService } from "./services/BackGroundService.js";
+import { UIManager } from "./services/UIManager.js";
 //  import { Note } from "./models/Note.js";
 
  class NoteApp {
     private noteService: NoteService;
     private noteList: NoteList;
-    private currentEditor: NoteEditor | null = null;
     private bgService: BackGroundService;
+    private UImanager: UIManager;
 
     constructor() {
         this.noteService = new NoteService;
         this.noteList = new NoteList(document.getElementById("mainContent")!);
         this.bgService = new BackGroundService;
-        this.initialize();
-        this.loadNotes();
-    }
-
-    private initialize(): void {
+        this.UImanager = new UIManager;
         this.setUpEventListeners();
-        StorageService.loadNote();
+        this.loadNotes();
     }
 
     private setUpEventListeners(): void {
         document.querySelector(".addButton")?.addEventListener("click", () => {
-            const editorContainer = document.createElement("div");
-            this.currentEditor = new NoteEditor(editorContainer);
-            this.currentEditor?.showEditor();
+            this.UImanager.insertMode();
         });
 
         document.querySelector(".themeToggle")?.addEventListener("change", () => {

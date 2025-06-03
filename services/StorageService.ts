@@ -17,8 +17,8 @@ export class StorageService{
         localStorage.setItem(this.THEME_KEY, isDark ? '1' : '0');
     }
 
-    static getTheme(): boolean{
-        return localStorage.getItem("theme") === "1" ? true : false;
+    static getTheme(): string{
+        return localStorage.getItem("theme") || "false";
     }
 }
 

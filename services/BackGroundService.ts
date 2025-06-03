@@ -4,7 +4,7 @@ export class BackGroundService{
     private isDark: boolean = false;
 
     constructor(){
-        this.isDark = StorageService.getTheme();
+        this.isDark = (StorageService.getTheme() === "1" ? true : false);
         this.applyTheme();
     }
 

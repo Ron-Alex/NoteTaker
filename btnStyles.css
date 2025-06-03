@@ -1,4 +1,4 @@
-.addButton, .cancelBtn {
+.bodyButton {
   appearance: none;
   background-color: #FAFBFC;
   border: 1px solid rgba(27, 31, 35, 0.15);
@@ -24,47 +24,47 @@
   word-wrap: break-word;
 }
 
-.addButton:hover , .cancelBtn:hover{
+.bodyButton:hover{
   background-color: #F3F4F6;
   text-decoration: none;
   transition-duration: 0.1s;
 }
 
-.bodyDarkMode .addButton
+.bodyDarkMode .bodyButton
 {
   color: white;
   background-color: #212121;
   border: 1px solid white;
 }
 
-.bodyDarkMode .cancelBtn
+/* .bodyDarkMode .cancelBtn
 {
   color: white;
   background-color: #212121;
   border: 1px solid white;
-}
+} */
 
-.addButton:disabled , .cancelBtn:disabled{
+.bodyButton:disabled {
   background-color: #FAFBFC;
   border-color: rgba(27, 31, 35, 0.15);
   color: #959DA5;
   cursor: default;
 }
 
-.addButton:active , .cancelBtn:active{
+.bodyButton:active {
   background-color: #EDEFF2;
   box-shadow: rgba(225, 228, 232, 0.2) 0 1px 0 inset;
   transition: none 0s;
 }
 
-.addButton:focus , .cancelBtn:focus{
+.bodyButton:focus {
   outline: 1px transparent;
 }
 
-.addButton:before , .cancelBtn:before{
+.bodyButton:before{
   display: none;
 }
 
-.addButton:-webkit-details-marker , .cancelBtn:-webkit-details-marker{
+.bodyButton:-webkit-details-marker{
   display: none;
 }

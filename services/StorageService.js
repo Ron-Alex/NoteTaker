@@ -10,7 +10,7 @@ export class StorageService {
         localStorage.setItem(this.THEME_KEY, isDark ? '1' : '0');
     }
     static getTheme() {
-        return localStorage.getItem("theme") === "1" ? true : false;
+        return localStorage.getItem("theme") || "false";
     }
 }
 StorageService.NOTE_KEY = "notes";

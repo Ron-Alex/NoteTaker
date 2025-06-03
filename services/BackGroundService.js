@@ -2,7 +2,7 @@ import { StorageService } from "./StorageService.js";
 export class BackGroundService {
     constructor() {
         this.isDark = false;
-        this.isDark = StorageService.getTheme();
+        this.isDark = (StorageService.getTheme() === "1" ? true : false);
         this.applyTheme();
     }
     //use of Initialize??
