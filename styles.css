@@ -1,4 +1,4 @@
-.docBody
+ .docBody
 {
     margin: 0 5% 0 5%;
 }
@@ -15,14 +15,7 @@
     letter-spacing: 0.1ch;
 }
 
-.textInput
-{
-    width: 70vw;
-    height: 30px;
-}
-
 .searchBar, .textInput {
-    /* color: #fff; */
     font-size: 0.9rem;
     background-color: transparent;
     box-sizing: border-box;
@@ -51,6 +44,7 @@ input:focus
 
 .navbar{
     display: flex;
+
     align-items: center;
     width: 100vw;
 }
@@ -60,22 +54,27 @@ input:focus
     justify-self: center;
     position: fixed;
     height: 30px;
-    /* margin-left: 50%; */
     right: 15%;
 }
 
 .switch
 {
-    /* margin-left: 5%; */
     position: fixed;
     right: 5%;
 }
 
+#editorArea{
+    height: max-content;
+}
+/* 
+.ql-container{
+    height: max-content !important;
+} */
+/*
 .addedNote
 {
     font-family: "Space Grotesk", sans-serif;
     transition: all 0.2s ease;
-    /* width: 80vw; */
     word-wrap: break-word;
 }
 
@@ -84,7 +83,6 @@ input:focus
     background-color: lightgray;
     cursor: pointer;
     transform: scale(1.01);
-    /* transform: translateY(-5px); */
 }
 
 .bodyDarkMode .addedNote:hover
@@ -97,11 +95,5 @@ input:focus
 }
 
 #editor{
-    height: max-content;
-    border-radius: 5px;
-}
 
-/* 
-#editor .bodyDarkMode{
-    color: white;
 } */
