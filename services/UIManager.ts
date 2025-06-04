@@ -3,24 +3,79 @@ import { NoteEditor } from "./NoteEditor.js";
 export class UIManager{
 
     private currentEditor: NoteEditor | null = null;
+    private mode: string = "viewMode";
+    private addButton: HTMLElement | null = null;
+    private submitButton: HTMLElement | null = null;
+    private cancelButton: HTMLElement | null = null;
+    private editorContainer: HTMLElement | null = null;
 
-    makeButton(btnType: string, addClass: string): HTMLElement{
-        const newBtn = document.createElement("button");
-        newBtn.classList.add("bodyButton", addClass);
-        newBtn.textContent = btnType;
-        return newBtn;
+    constructor() {
+        this.initialize();
+        this.setUpEvents();
     }
 
-    removeButton(btn: HTMLElement): void{
-        btn.remove();
+    private initialize(): void{
+        this.addButton = document.querySelector(".addButton");
+        const editorDiv = document.createElement("div");
+        this.editorContainer = editorDiv;
     }
 
-    insertMode(){
-        const editorContainer = document.createElement("div");
-        this.currentEditor = new NoteEditor(editorContainer);
-        this.currentEditor?.showEditor();
-        editorContainer.insertAdjacentElement("afterend", this.makeButton("Submit", "submitButton"));
-        editorContainer.insertAdjacentElement("afterend", this.makeButton("Cancel", "cancelButton"));
-        this.removeButton(document.querySelector(".addButton")!);
+    setUpEvents(): void{
+        document.addEventListener("click", (e) => {
+            const funcTarg = e.target as HTMLElement;
+            if(funcTarg.classList.contains("submitButton")){
+                this.insertMode();
+            }
+            if(funcTarg.classList.contains("cancelButton")){
+                this.viewMode();
+            }
+        })
     }
+
+    makeButton(text: string, newClass: string): HTMLElement{
+        const newButton = document.createElement('button');
+        newButton.classList.add("bodyButton", newClass);
+        newButton.textContent = text;
+        return newButton;
+    }
+
+    killButton(button: HTMLElement): void{
+        button.remove();
+    }
+
+    hideButton(button: HTMLElement): HTMLElement{
+        button.style.display = "none";
+        return button;
+    }
+
+    viewButton(button: HTMLElement): HTMLElement{
+        button.style.display = "";
+        return button;
+    }
+
+    insertMode(): void{
+        if(this.mode === "insertMode") return;
+        this.mode = "insertMode";
+        if(this.addButton) this.hideButton(this.addButton);
+        
+        if(this.editorContainer){
+            this.currentEditor = new NoteEditor(this.editorContainer);
+            this.currentEditor.showEditor();
+        }
+        const submitButton = this.makeButton("Submit", "submitButton");
+        const cancelButton = this.makeButton("Cancel", "cancelButton");
+
+        if(this.editorContainer)
+        {
+            this.editorContainer.insertAdjacentElement('afterend', submitButton);
+            this.editorContainer.insertAdjacentElement("afterend", cancelButton);
+        }
+    }
+
+    viewMode(): void{
+        if(this.mode === "viewMode") return;
+        this.mode = "viewMode";
+        if(this.addButton) this.viewButton(this.addButton);
+    }
+
 }

@@ -10,6 +10,7 @@ import { UIManager } from "./services/UIManager.js";
     private noteList: NoteList;
     private bgService: BackGroundService;
     private UImanager: UIManager;
+    
 
     constructor() {
         this.noteService = new NoteService;
