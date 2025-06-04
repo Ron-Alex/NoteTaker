@@ -62,13 +62,14 @@ export class UIManager{
             this.currentEditor = new NoteEditor(this.editorContainer);
             this.currentEditor.showEditor();
         }
-        const submitButton = this.makeButton("Submit", "submitButton");
-        const cancelButton = this.makeButton("Cancel", "cancelButton");
+        this.submitButton = this.makeButton("Submit", "submitButton");
+        this.cancelButton = this.makeButton("Cancel", "cancelButton");
+        
 
         if(this.editorContainer)
         {
-            this.editorContainer.insertAdjacentElement('afterend', submitButton);
-            this.editorContainer.insertAdjacentElement("afterend", cancelButton);
+            this.editorContainer.insertAdjacentElement('afterend', this.submitButton);
+            this.editorContainer.insertAdjacentElement("afterend", this.cancelButton);
         }
     }
 
@@ -76,6 +77,15 @@ export class UIManager{
         if(this.mode === "viewMode") return;
         this.mode = "viewMode";
         if(this.addButton) this.viewButton(this.addButton);
+        if(this.editorContainer){
+            this.currentEditor?.clear();
+            this.currentEditor?.removeEditor();
+        }
+        if(this.cancelButton && this.submitButton)
+        {
+            this.killButton(this.cancelButton);
+            this.killButton(this.submitButton);
+        }
     }
 
 }
