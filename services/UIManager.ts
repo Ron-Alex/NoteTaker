@@ -1,5 +1,6 @@
 import { NoteObj } from "../models/NoteObj.js";
 import { NoteEditor } from "./NoteEditor.js";
+import { StorageService } from "./StorageService.js";
 
 export class UIManager{
 
@@ -9,34 +10,25 @@ export class UIManager{
     private submitButton: HTMLElement | null = null;
     private cancelButton: HTMLElement | null = null;
     private editorContainer: HTMLElement | null = null;
+    private editorParent: HTMLElement | null = null;
 
     constructor() {
         this.initialize();
-        this.setUpEvents();
     }
 
     private initialize(): void{
         this.addButton = document.querySelector(".addButton");
-        const editorDiv = document.createElement("div");
-        this.editorContainer = editorDiv;
-    }
-
-    setUpEvents(): void{
-        document.addEventListener("click", (e) => {
-            // const funcTarg = e.target as HTMLElement;
-            // if(funcTarg.classList.contains("submitButton")){
-            //     const newNote = this.currentEditor?.getContents();
-            //     this.viewMode();
-            // }
-            // if(funcTarg.classList.contains("cancelButton")){
-            //     this.viewMode();
-            // }
-        })
+        this.editorContainer = document.createElement("div");
+        this.currentEditor = new NoteEditor(this.editorContainer);
     }
 
     returnEditorObject(): NoteObj{
         const editorObj = this.currentEditor?.getContents()!;
         return editorObj;
+    }
+
+    returnEditorText(): string{
+        return this.currentEditor?.getText()!;
     }
 
     makeButton(text: string, newClass: string): HTMLElement{
@@ -63,11 +55,12 @@ export class UIManager{
     insertMode(): void{
         if(this.mode === "insertMode") return;
         this.mode = "insertMode";
+        this.editorParent = document.querySelector("#editorArea")!;
+        console.log(this.editorContainer);
         if(this.addButton) this.hideButton(this.addButton);
         
         if(this.editorContainer){
-            this.currentEditor = new NoteEditor(this.editorContainer);
-            this.currentEditor.showEditor();
+            this.currentEditor!.showEditor(this.editorParent!);
         }
         this.submitButton = this.makeButton("Submit", "submitButton");
         this.cancelButton = this.makeButton("Cancel", "cancelButton");
@@ -94,4 +87,20 @@ export class UIManager{
         }
     }
 
+    editorMode(clickedNote: HTMLElement): void{
+        console.log(clickedNote);
+        if (this.mode === "editorMode") return;
+        this.mode = "editorMode";
+        this.editorParent = clickedNote;
+        const divID = clickedNote.getAttribute("data-id");
+        const notes = StorageService.loadNote();
+        for(let i = 0; i < notes.length; i++)
+        {
+            if(divID === notes[i].storedID)
+            {
+                this.currentEditor?.showEditor(this.editorParent!);
+                this.currentEditor?.setContent(notes[i].content);
+            }
+        }
+    }
 }

@@ -26,6 +26,14 @@ export class NoteService {
         StorageService.setNote(this.notes);
     }
 
+    hideNote(note: HTMLElement): void{
+        note.style.display = "none";
+    }
+
+    showNote(note: HTMLElement): void{
+        note.style.display = "";
+    }
+
     getAllNotes(): Note[] {
         return StorageService.loadNote();
     }

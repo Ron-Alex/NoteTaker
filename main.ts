@@ -3,14 +3,12 @@ import { NoteService } from "./services/NoteService.js";
 import { NoteList } from "./services/NoteList.js";
 import { BackGroundService } from "./services/BackGroundService.js";
 import { UIManager } from "./services/UIManager.js";
-//  import { Note } from "./models/Note.js";
 
  class NoteApp {
     private noteService: NoteService;
     private noteList: NoteList;
     private bgService: BackGroundService;
     private UImanager: UIManager;
-    
 
     constructor() {
         this.noteService = new NoteService;
@@ -24,16 +22,35 @@ import { UIManager } from "./services/UIManager.js";
     private setUpEventListeners(): void {
         document.addEventListener("click", (e) => {
             const funcTarg: HTMLElement = e.target as HTMLElement;
+            const parentDiv = funcTarg.closest(".addedNote") as HTMLElement;
+
             if(funcTarg.classList.contains("addButton")){
                 this.UImanager.insertMode();
             }
+
             if(funcTarg.classList.contains("submitButton"))
             {
+                const editorText = this.UImanager.returnEditorText();
+                if(editorText.trim() == "") 
+                {
+                    alert("Text Input is empty");
+                    this.UImanager.viewMode();
+                    return;
+                }
                 const newNoteObj = this.UImanager.returnEditorObject();
-                console.log(newNoteObj);
                 const newNote = this.noteService.addNote(newNoteObj);
-                console.log(newNote);
                 this.noteList.renderNote(newNote);
+                this.UImanager.viewMode();
+            }
+
+            if(funcTarg.classList.contains("cancelButton"))
+            {
+                this.UImanager.viewMode();
+            }
+
+            if(parentDiv)
+            {
+                this.UImanager.editorMode(parentDiv);
             }
         });
 

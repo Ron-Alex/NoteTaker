@@ -10,13 +10,12 @@ export class NoteEditor{
 
     initializeEditor(): void{
         this.quill = new Quill(this.container, {
-        theme: 'snow'
+            theme: 'snow'
         })
-    };
+    }
 
-    showEditor(): void{
-        const editorArea: HTMLElement = document.querySelector("#editorArea")!;
-        editorArea.appendChild(this.container);
+    showEditor(newEditorDiv: HTMLElement): void{
+        newEditorDiv.appendChild(this.container);
         this.initializeEditor();
     }
 
@@ -24,6 +23,14 @@ export class NoteEditor{
         const toolbar = document.getElementsByClassName("ql-toolbar")[0] as HTMLElement;
         this.destroy(this.container);
         this.destroy(toolbar);
+    }
+
+    getText(): string{
+        return this.quill.getText();
+    }
+
+    setContent(content: NoteObj): void{
+        this.quill.setContents(content);
     }
 
     getContents(): NoteObj{
