@@ -15,6 +15,7 @@ export class NoteEditor{
     }
 
     showEditor(newEditorDiv: HTMLElement): void{
+        newEditorDiv.classList.add("editorElement")
         newEditorDiv.appendChild(this.container);
         this.initializeEditor();
     }

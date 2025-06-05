@@ -63,7 +63,7 @@ input:focus
     right: 5%;
 }
 
-#editorArea{
+.editorElement{
     height: max-content;
 }
 /* 
