@@ -1,3 +1,4 @@
+import { NoteObj } from "../models/NoteObj.js";
 import { NoteEditor } from "./NoteEditor.js";
 
 export class UIManager{
@@ -22,14 +23,20 @@ export class UIManager{
 
     setUpEvents(): void{
         document.addEventListener("click", (e) => {
-            const funcTarg = e.target as HTMLElement;
-            if(funcTarg.classList.contains("submitButton")){
-                this.insertMode();
-            }
-            if(funcTarg.classList.contains("cancelButton")){
-                this.viewMode();
-            }
+            // const funcTarg = e.target as HTMLElement;
+            // if(funcTarg.classList.contains("submitButton")){
+            //     const newNote = this.currentEditor?.getContents();
+            //     this.viewMode();
+            // }
+            // if(funcTarg.classList.contains("cancelButton")){
+            //     this.viewMode();
+            // }
         })
+    }
+
+    returnEditorObject(): NoteObj{
+        const editorObj = this.currentEditor?.getContents()!;
+        return editorObj;
     }
 
     makeButton(text: string, newClass: string): HTMLElement{
@@ -65,7 +72,6 @@ export class UIManager{
         this.submitButton = this.makeButton("Submit", "submitButton");
         this.cancelButton = this.makeButton("Cancel", "cancelButton");
         
-
         if(this.editorContainer)
         {
             this.editorContainer.insertAdjacentElement('afterend', this.submitButton);

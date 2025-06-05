@@ -70,10 +70,11 @@ input:focus
 .ql-container{
     height: max-content !important;
 } */
-/*
+
 .addedNote
 {
     font-family: "Space Grotesk", sans-serif;
+    margin: 5px 0 10px 0;
     transition: all 0.2s ease;
     word-wrap: break-word;
 }
@@ -93,7 +94,3 @@ input:focus
 .hoveredOver{
     background-color: #666666;
 }
-
-#editor{
-
-} */

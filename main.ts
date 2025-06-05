@@ -22,8 +22,19 @@ import { UIManager } from "./services/UIManager.js";
     }
 
     private setUpEventListeners(): void {
-        document.querySelector(".addButton")?.addEventListener("click", () => {
-            this.UImanager.insertMode();
+        document.addEventListener("click", (e) => {
+            const funcTarg: HTMLElement = e.target as HTMLElement;
+            if(funcTarg.classList.contains("addButton")){
+                this.UImanager.insertMode();
+            }
+            if(funcTarg.classList.contains("submitButton"))
+            {
+                const newNoteObj = this.UImanager.returnEditorObject();
+                console.log(newNoteObj);
+                const newNote = this.noteService.addNote(newNoteObj);
+                console.log(newNote);
+                this.noteList.renderNote(newNote);
+            }
         });
 
         document.querySelector(".themeToggle")?.addEventListener("change", () => {

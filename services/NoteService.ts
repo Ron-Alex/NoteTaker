@@ -1,4 +1,5 @@
 import { Note } from "../models/Note.js";
+import { NoteObj } from "../models/NoteObj.js";
 import { StorageService } from "./StorageService.js";
 
 export class NoteService {
@@ -8,7 +9,7 @@ export class NoteService {
         this.notes = StorageService.loadNote();
     }
 
-    addNote(content: object): Note{
+    addNote(content: NoteObj): Note{
         const note: Note = {
             storedID: crypto.randomUUID(),
             content: content,

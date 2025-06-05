@@ -1,3 +1,5 @@
+import { NoteObj } from "../models/NoteObj";
+
 export class NoteEditor{
     private quill: any;
     private container: HTMLElement;
@@ -24,7 +26,7 @@ export class NoteEditor{
         this.destroy(toolbar);
     }
 
-    getContents(): object{
+    getContents(): NoteObj{
         return this.quill.getContents();
     }
 

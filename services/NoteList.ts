@@ -17,8 +17,9 @@ export class NoteList{
 
     renderNote(note: Note): void{
         const noteDiv = document.createElement("div");
-        noteDiv.className = "note-item";
+        noteDiv.classList.add("note-item", "addedNote");
         noteDiv.dataset.id = note.storedID;
+        noteDiv.textContent = note.content.ops[0].insert;
         this.noteContainer.appendChild(noteDiv);
     }
 }
