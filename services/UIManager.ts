@@ -11,15 +11,18 @@ export class UIManager{
     private mode: Mode = "viewMode";
     private tempEditor = new TempEditor;
 
-    private addButton: HTMLElement | null = null;
-    private submitButton: HTMLElement | null = null;
-    private cancelButton: HTMLElement | null = null;
-    private acceptButton: HTMLElement | null = null;
-    private deleteButton: HTMLElement | null = null;
+    private buttons = {
+        submit: null as HTMLElement | null,
+        cancel: null as HTMLElement | null,
+        accept: null as  HTMLElement | null,
+        delete: null as HTMLElement | null
+    }
     
+    private addButton: HTMLElement | null = null;
     private editorContainer: HTMLElement | null = null;
     private editorParent: HTMLElement | null = null;
     private clickedNoteObj: NoteObj | null = null;
+    private buttonContainer: HTMLElement | null = null;
 
     constructor() {
         this.initialize();
@@ -29,8 +32,21 @@ export class UIManager{
         this.addButton = document.querySelector(".addButton");
         this.editorContainer = document.createElement("div");
         this.currentEditor = new NoteEditor(this.editorContainer);
-        this.submitButton = this.makeButton("Submit", "submitButton");
-        this.cancelButton = this.makeButton("Cancel", "cancelButton");
+        this.makeButtonArea();
+
+        this.buttons.submit = this.makeButton("Submit", "submitButton");
+        this.buttons.cancel = this.makeButton("Cancel", "cancelButton");
+        this.buttons.accept = this.makeButton("Accept", "acceptButton");
+        this.buttons.delete = this.makeButton("Delete Note", "deleteButton");
+    }
+
+    makeButtonArea(): void{
+        const newContainer = document.createElement("div");
+        this.buttonContainer = newContainer;
+    }
+
+    removeButtonArea(buttonArea: HTMLElement):void{
+        buttonArea.remove();
     }
 
     returnEditorObject(): NoteObj{
@@ -41,7 +57,7 @@ export class UIManager{
     returnEditorText(): string{
         return this.currentEditor?.getText()!;
     }
-
+    
     makeButton(text: string, newClass: string): HTMLElement{
         const newButton = document.createElement('button');
         newButton.classList.add("bodyButton", newClass);
@@ -67,17 +83,22 @@ export class UIManager{
         if(this.mode === "insertMode") return;
         this.mode = "insertMode";
         this.editorParent = document.querySelector("#editorArea")!;
-        console.log(this.editorContainer);
         if(this.addButton) this.hideButton(this.addButton);
-        
-        if(this.editorContainer){
-            this.currentEditor!.showEditor(this.editorParent!);
+
+        if(this.buttonContainer)
+        {
+            console.log("woo");
+            this.editorParent.insertAdjacentElement("afterend", this.buttonContainer);
         }
         
-        if(this.editorContainer && this.cancelButton && this.submitButton)
+        if(this.editorContainer && this.buttons.cancel && this.buttons.submit)
         {
-            this.editorContainer.insertAdjacentElement('afterend', this.submitButton);
-            this.editorContainer.insertAdjacentElement("afterend", this.cancelButton);
+            this.buttonContainer?.appendChild(this.buttons.cancel);
+            this.buttonContainer?.appendChild(this.buttons.submit);
+        }
+
+        if(this.editorContainer){
+            this.currentEditor!.showEditor(this.editorParent!);
         }
     }
 
@@ -91,32 +112,30 @@ export class UIManager{
                 this.currentEditor?.clear();
                 this.currentEditor?.removeEditor();
             }
-            if(this.cancelButton && this.submitButton)
+            if(this.buttons.cancel && this.buttons.submit)
             {
-                this.killButton(this.cancelButton);
-                this.killButton(this.submitButton);
+                this.killButton(this.buttons.cancel);
+                this.killButton(this.buttons.submit);
             }
         }
         if(this.mode === "editorMode")
         {
             this.mode = "viewMode";
-            if(this.deleteButton && this.acceptButton && this.cancelButton)
+            if(this.buttons.delete && this.buttons.accept && this.buttons.cancel)
             {
-                this.killButton(this.deleteButton);
-                this.killButton(this.acceptButton);
-                this.killButton(this.cancelButton);
+                this.killButton(this.buttons.delete);
+                this.killButton(this.buttons.accept);
+                this.killButton(this.buttons.cancel);
             }
             this.currentEditor?.removeEditor();
             if(this.clickedNoteObj)
             {
                 this.editorParent!.innerHTML = this.tempEditor.returnHTMLFromObj(this.clickedNoteObj);
             }
-            
         }
     }
 
     editorMode(clickedNote: HTMLElement): void{
-        console.log(clickedNote);
         if (this.mode === "editorMode") return;
         this.mode = "editorMode";
         this.editorParent = clickedNote;
@@ -133,13 +152,14 @@ export class UIManager{
                 break;
             }
         }
-        this.acceptButton = this.makeButton("Accept", "acceptButton");
-        this.deleteButton = this.makeButton("Delete Note", "deleteButton");
-        if(this.cancelButton && this.acceptButton && this.deleteButton)
+        if(this.buttonContainer)
+        clickedNote.insertAdjacentElement('afterend', this.buttonContainer)
+
+        if(this.buttons.cancel && this.buttons.accept && this.buttons.delete)
         {
-            clickedNote.insertAdjacentElement("afterend", this.acceptButton);
-            clickedNote.insertAdjacentElement("afterend", this.cancelButton);
-            clickedNote.insertAdjacentElement("afterend", this.deleteButton);
+            this.buttonContainer?.appendChild(this.buttons.delete);
+            this.buttonContainer?.appendChild(this.buttons.cancel);
+            this.buttonContainer?.appendChild(this.buttons.accept);
         }
     }
 }
