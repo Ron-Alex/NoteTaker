@@ -10,6 +10,7 @@ export class UIManager{
     private currentEditor: NoteEditor | null = null;
     private mode: Mode = "viewMode";
     private tempEditor = new TempEditor;
+    contentEditable: boolean = true;
 
     private buttons = {
         submit: null as HTMLElement | null,
@@ -23,6 +24,8 @@ export class UIManager{
     private editorParent: HTMLElement | null = null;
     private clickedNoteObj: NoteObj | null = null;
     private buttonContainer: HTMLElement | null = null;
+
+    noteDelID: string = "";
 
     constructor() {
         this.initialize();
@@ -83,11 +86,11 @@ export class UIManager{
         if(this.mode === "insertMode") return;
         this.mode = "insertMode";
         this.editorParent = document.querySelector("#editorArea")!;
+        
         if(this.addButton) this.hideButton(this.addButton);
 
         if(this.buttonContainer)
         {
-            console.log("woo");
             this.editorParent.insertAdjacentElement("afterend", this.buttonContainer);
         }
         
@@ -99,15 +102,17 @@ export class UIManager{
 
         if(this.editorContainer){
             this.currentEditor!.showEditor(this.editorParent!);
+            this.currentEditor?.clear();
         }
     }
 
     viewMode(): void{
         if(this.mode === "viewMode") return;
+        if(this.addButton) this.viewButton(this.addButton);
+        this.contentEditable = true;
         if(this.mode === "insertMode")
         {
             this.mode = "viewMode";
-            if(this.addButton) this.viewButton(this.addButton);
             if(this.editorContainer){
                 this.currentEditor?.clear();
                 this.currentEditor?.removeEditor();
@@ -117,6 +122,8 @@ export class UIManager{
                 this.killButton(this.buttons.cancel);
                 this.killButton(this.buttons.submit);
             }
+            if(this.buttonContainer)
+            this.removeButtonArea(this.buttonContainer);
         }
         if(this.mode === "editorMode")
         {
@@ -137,9 +144,12 @@ export class UIManager{
 
     editorMode(clickedNote: HTMLElement): void{
         if (this.mode === "editorMode") return;
+        if (this.contentEditable === false) return;
         this.mode = "editorMode";
         this.editorParent = clickedNote;
+        if(this.addButton) this.hideButton(this.addButton);
         const divID = clickedNote.getAttribute("data-id");
+        if(divID) this.noteDelID = divID;
         const notes = StorageService.loadNote();
         clickedNote.textContent = '';
         for(let i = 0; i < notes.length; i++)

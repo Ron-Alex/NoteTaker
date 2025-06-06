@@ -4,8 +4,8 @@ export class NoteEditor{
     private quill: any;
     private container: HTMLElement;
 
-    constructor(container: HTMLElement){
-        this.container = container;
+    constructor(nContainer: HTMLElement){
+        this.container = nContainer;
     }
 
     initializeEditor(): void{
@@ -22,6 +22,7 @@ export class NoteEditor{
 
     removeEditor(): void{
         const toolbar = document.getElementsByClassName("ql-toolbar")[0] as HTMLElement;
+        console.log(this.container, toolbar);
         this.destroy(this.container);
         this.destroy(toolbar);
     }
@@ -47,6 +48,10 @@ export class NoteEditor{
     }
 
     destroy(container: HTMLElement): void{
+        if(!container)
+        {
+            console.warn("ALLAH");
+        }
         container.remove();
     }
 }

@@ -11,6 +11,10 @@ export class NoteList{
         this.noteContainer = noteContainer;
     }
 
+    deleteNoteDiv(noteDiv: HTMLDivElement): void{
+        noteDiv.remove();
+    }
+
     render(notes: Note[]): void{
         this.notes = notes;
         this.noteContainer.innerHTML = '';

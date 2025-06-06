@@ -25,6 +25,7 @@ import { UIManager } from "./services/UIManager.js";
             const parentDiv = funcTarg.closest(".addedNote") as HTMLElement;
 
             if(funcTarg.classList.contains("addButton")){
+                this.UImanager.contentEditable = false;
                 this.UImanager.insertMode();
             }
 
@@ -46,6 +47,21 @@ import { UIManager } from "./services/UIManager.js";
             if(funcTarg.classList.contains("cancelButton"))
             {
                 this.UImanager.viewMode();
+            }
+
+            if(funcTarg.classList.contains("deleteButton"))
+            {
+                this.UImanager.viewMode();
+                const noteToBeDel = this.UImanager.noteDelID;
+                this.noteService.deleteNote(noteToBeDel);
+                const selectedNote = document.querySelector(`[data-id="${noteToBeDel}"]`);
+                if(selectedNote)
+                this.noteList.deleteNoteDiv(selectedNote as HTMLDivElement);
+            }
+
+            if(funcTarg.classList.contains("acceptButton"))
+            {
+                
             }
 
             if(parentDiv)
