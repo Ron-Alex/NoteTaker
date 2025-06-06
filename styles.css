@@ -3,6 +3,10 @@
     margin: 0 5% 0 5%;
 }
 
+p{
+    margin: 0 0 0 0;
+}
+
 .bodyDarkMode
 {
     background-color: #212121;
@@ -74,7 +78,7 @@ input:focus
 .addedNote
 {
     font-family: "Space Grotesk", sans-serif;
-    margin: 5px 0 10px 0;
+    margin: 20px 0 20px 0;
     transition: all 0.2s ease;
     word-wrap: break-word;
 }

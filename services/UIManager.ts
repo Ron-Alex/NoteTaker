@@ -25,7 +25,7 @@ export class UIManager{
     private clickedNoteObj: NoteObj | null = null;
     private buttonContainer: HTMLElement | null = null;
 
-    noteDelID: string = "";
+    noteChange: string = "";
 
     constructor() {
         this.initialize();
@@ -54,6 +54,11 @@ export class UIManager{
 
     returnEditorObject(): NoteObj{
         const editorObj = this.currentEditor?.getContents()!;
+        return editorObj;
+    }
+
+    returnEditorHTML(): any{
+        const editorObj = this.currentEditor?.getHTML()!;
         return editorObj;
     }
 
@@ -110,6 +115,8 @@ export class UIManager{
         if(this.mode === "viewMode") return;
         if(this.addButton) this.viewButton(this.addButton);
         this.contentEditable = true;
+        if(this.buttonContainer)
+        this.removeButtonArea(this.buttonContainer);
         if(this.mode === "insertMode")
         {
             this.mode = "viewMode";
@@ -149,7 +156,7 @@ export class UIManager{
         this.editorParent = clickedNote;
         if(this.addButton) this.hideButton(this.addButton);
         const divID = clickedNote.getAttribute("data-id");
-        if(divID) this.noteDelID = divID;
+        if(divID) this.noteChange = divID;
         const notes = StorageService.loadNote();
         clickedNote.textContent = '';
         for(let i = 0; i < notes.length; i++)

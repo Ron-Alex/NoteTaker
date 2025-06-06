@@ -52,7 +52,7 @@ import { UIManager } from "./services/UIManager.js";
             if(funcTarg.classList.contains("deleteButton"))
             {
                 this.UImanager.viewMode();
-                const noteToBeDel = this.UImanager.noteDelID;
+                const noteToBeDel = this.UImanager.noteChange;
                 this.noteService.deleteNote(noteToBeDel);
                 const selectedNote = document.querySelector(`[data-id="${noteToBeDel}"]`);
                 if(selectedNote)
@@ -61,7 +61,21 @@ import { UIManager } from "./services/UIManager.js";
 
             if(funcTarg.classList.contains("acceptButton"))
             {
-                
+                this.UImanager.viewMode();
+                const noteToBeEdited = this.UImanager.noteChange;
+                const editedNote = this.UImanager.returnEditorObject();
+                const selectedNote = document.querySelector(`[data-id="${noteToBeEdited}"]`);
+                let notes = StorageService.loadNote();
+                for(let i = 0; i < notes.length; i++){
+                    if(notes[i].storedID === noteToBeEdited)
+                    {
+                        notes[i].content = editedNote;
+                        break;
+                    }
+                }
+                if(selectedNote)
+                selectedNote.innerHTML = this.UImanager.returnEditorHTML();
+                StorageService.setNote(notes);
             }
 
             if(parentDiv)
