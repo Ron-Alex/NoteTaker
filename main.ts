@@ -83,6 +83,13 @@ import { UIManager } from "./services/UIManager.js";
                 this.UImanager.editorMode(parentDiv);
             }
         });
+        
+        document.querySelector(".searchBar")?.addEventListener("input", (e) => {
+            const wordTarg = e.target as HTMLInputElement;
+            console.log(wordTarg.value);
+            if(wordTarg.value)
+                this.UImanager.searchMode(wordTarg.value);
+            })
 
         document.querySelector(".themeToggle")?.addEventListener("change", () => {
             this.bgService.toggleTheme();

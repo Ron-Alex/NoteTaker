@@ -7,6 +7,7 @@ export class TempEditor{
             theme: 'snow'
         });
         tempEditor.setContents(content);
+        
         const HTMLData = tempEditor.getSemanticHTML();
         return HTMLData;
     }

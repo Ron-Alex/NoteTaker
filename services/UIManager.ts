@@ -179,4 +179,23 @@ export class UIManager{
             this.buttonContainer?.appendChild(this.buttons.accept);
         }
     }
+
+    searchMode(searchedText: string): void{
+        console.log("Called");
+        const allNotes = document.getElementsByClassName("addedNote") as HTMLCollectionOf<HTMLElement>;
+        const lowerCaseSearch = searchedText.toLowerCase();
+        for(let i = 0; i < allNotes.length; i++){
+            console.log("Looped");
+            const lowerCaseNote = allNotes[i].textContent?.toLowerCase();
+            const note = allNotes[i];
+            if(!lowerCaseNote?.includes(lowerCaseSearch))
+            {
+                note.style.display = "none";
+            }
+            else
+            {
+                note.style.display = "";
+            }
+        }
+    }
 }
