@@ -16,20 +16,6 @@ A simple, lightweight note-taking web app built using **Vanilla JavaScript** wit
 - Vanilla JavaScript (compiled from TS)
 - HTML5 & CSS3
 
-## 📂 Folder Structure
-
-Vanilla - TS/
-├── index.html
-├── styles.css
-├── main.ts
-├── main.js (compiled)
-├── utils/
-│ └── storage.ts
-
-bash
-Copy
-Edit
-
 ## 🔧 Setup
 1. Clone the repo
 2. Navigate to directory
