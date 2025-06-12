@@ -1,0 +1,13 @@
+{
+  "devDependencies": {
+    "@types/node": "^22.15.30",
+    "nodemon": "^3.1.10",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "scripts": {
+  "dev": "nodemon --exec npx ts-node ./index.ts"
+  }
+}
