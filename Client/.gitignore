@@ -1,5 +1,0 @@
-node_modules/
-
-# Ignore compiled JS files
-*.js
-*.js.map

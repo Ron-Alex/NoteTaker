@@ -1,0 +1,26 @@
+# Node
+node_modules/
+dist/
+build/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# TypeScript
+*.tsbuildinfo
+
+# Env files
+.env
+.env.* 
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Output folders in sub-projects
+frontend/dist/
+frontend/node_modules/
+backend/dist/
+backend/node_modules/
