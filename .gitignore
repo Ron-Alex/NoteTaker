@@ -3,6 +3,10 @@ node_modules/
 dist/
 build/
 
+#JS
+*.js
+*.js.map
+
 # Logs
 npm-debug.log*
 yarn-debug.log*
