@@ -1,6 +1,8 @@
 import { Note } from "../models/Note";
+import { NoteObj } from "../models/NoteObj";
 
 export class DBStorage{
+
     static async getAllNotes(): Promise<any>{
         const notes = await fetch("http://localhost:4000/notes", {
             method: "get"
@@ -13,4 +15,54 @@ export class DBStorage{
         }));
         return parsedNotes;
     }
-}   
+
+    static async get_curr_Note(current_ID: string): Promise<Response> {
+        const cur_Note = await fetch("http://localhost:4000/notes/" + current_ID, {
+            method: 'get'
+        });
+        if(!cur_Note.ok){
+            throw new Error("Failed to get note");
+        }
+        const parsedNote = await cur_Note.json();
+        parsedNote.content = JSON.parse(parsedNote.content);
+        return parsedNote;
+    }
+
+    static async delete_curr_Note(current_ID: string): Promise<void>{
+        const response = await fetch("http://localhost:4000/notes/" + current_ID, {
+            method: "delete"
+        })
+        if(!response.ok) throw new Error("Could not delete Note");
+    }
+
+    static async add_Note(newNote: Note): Promise<void>
+    {
+        const response = await fetch("http://localhost:4000/notes/", {
+            method: 'post',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                storedID: newNote.storedID,
+                content: JSON.stringify(newNote.content),
+                created: newNote.created,
+                edited: newNote.edited
+            })
+        })
+        if(!response.ok) throw new Error("Could not create Note");
+    }
+
+    static async edit_Note(content: NoteObj, edited: Date, current_ID: string){
+        const response = await fetch("http://localhost:4000/notes/" + current_ID, {
+            method: "put",
+            // headers: {
+            //     "Content-Type": "text/"
+            // },
+            body: JSON.stringify({
+                content: content,
+                edited: edited
+            })
+        })
+        if(!response.ok) throw new Error("Could not edit note");
+    }
+}
