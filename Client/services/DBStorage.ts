@@ -10,13 +10,15 @@ export class DBStorage{
         if(!notes.ok) throw new Error("Failed to fetch notes");
         const rawData = await notes.json();
         const parsedNotes = rawData.map((note: any) => ({
-            ...note,
-            content: JSON.parse(note.content)
+            storedID: note.storedid,
+            content: JSON.parse(note.content),
+            created: new Date(note.createddate),
+            edited: new Date(note.editeddate)
         }));
         return parsedNotes;
     }
 
-    static async get_curr_Note(current_ID: string): Promise<Response> {
+    static async get_curr_Note(current_ID: string): Promise<Note> {
         const cur_Note = await fetch("http://localhost:4000/notes/" + current_ID, {
             method: 'get'
         });
@@ -24,8 +26,12 @@ export class DBStorage{
             throw new Error("Failed to get note");
         }
         const parsedNote = await cur_Note.json();
-        parsedNote.content = JSON.parse(parsedNote.content);
-        return parsedNote;
+        return {
+            storedID: parsedNote.storedID,
+            content: JSON.parse(parsedNote.content),
+            created: new Date(parsedNote.created),
+            edited: new Date(parsedNote.edited)
+        };
     }
 
     static async delete_curr_Note(current_ID: string): Promise<void>{
@@ -59,7 +65,7 @@ export class DBStorage{
             //     "Content-Type": "text/"
             // },
             body: JSON.stringify({
-                content: content,
+                content: JSON.stringify(content),
                 edited: edited
             })
         })

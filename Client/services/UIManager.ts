@@ -1,7 +1,9 @@
 import { NoteObj } from "../models/NoteObj.js";
+import { DBStorage } from "./DBStorage.js";
 import { NoteEditor } from "./NoteEditor.js";
 import { StorageService } from "./StorageService.js";
 import { TempEditor } from "./TempEditor.js";
+import { Note } from "../models/Note.js";
 
 type Mode = "viewMode" | "insertMode" | "editorMode";
 
@@ -149,37 +151,45 @@ export class UIManager{
         }
     }
 
-    editorMode(clickedNote: HTMLElement): void{
+    async editorMode(clickedNote: HTMLElement): Promise<void>{
         if (this.mode === "editorMode") return;
         if (this.contentEditable === false) return;
         this.mode = "editorMode";
         this.editorParent = clickedNote;
         if(this.addButton) this.hideButton(this.addButton);
         const divID = clickedNote.getAttribute("data-id");
-        if(divID) this.noteChange = divID;
-        const notes = StorageService.loadNote();
+        console.log(divID);
+        let selected_Note_from_DB: Note | null = null;
+        if(divID) {
+            this.noteChange = divID;
+            selected_Note_from_DB = await DBStorage.get_curr_Note(divID);
+        }
         clickedNote.textContent = '';
-        for(let i = 0; i < notes.length; i++)
-        {
-            if(divID === notes[i].storedID)
-            {
-                this.currentEditor?.showEditor(this.editorParent!);
-                this.clickedNoteObj = notes[i].content;
-                this.currentEditor?.setContent(notes[i].content);
-                break;
-            }
-        }
-        if(this.buttonContainer)
-        clickedNote.insertAdjacentElement('afterend', this.buttonContainer)
+        console.log(selected_Note_from_DB);
 
-        if(this.buttons.cancel && this.buttons.accept && this.buttons.delete)
-        {
-            this.buttonContainer?.appendChild(this.buttons.delete);
-            this.buttonContainer?.appendChild(this.buttons.cancel);
-            this.buttonContainer?.appendChild(this.buttons.accept);
-        }
+        // for(let i = 0; i < notes.length; i++)
+        // {
+        //     if(divID === notes[i].storedID)
+        //     {
+        //         this.currentEditor?.showEditor(this.editorParent!);
+        //         this.clickedNoteObj = notes[i].content;
+        //         this.currentEditor?.setContent(notes[i].content);
+        //         break;
+        //     }
+        // }
+        // if(this.buttonContainer)
+        // clickedNote.insertAdjacentElement('afterend', this.buttonContainer)
+
+        // if(this.buttons.cancel && this.buttons.accept && this.buttons.delete)
+        // {
+        //     this.buttonContainer?.appendChild(this.buttons.delete);
+        //     this.buttonContainer?.appendChild(this.buttons.cancel);
+        //     this.buttonContainer?.appendChild(this.buttons.accept);
+        // }
     }
 
+    //Queries all addedNotes, turns them into a HTMLCollection, and loops through them checking for the input string.
+    //If !found, sets the style to none
     searchMode(searchedText: string): void{
         console.log("Called");
         const allNotes = document.getElementsByClassName("addedNote") as HTMLCollectionOf<HTMLElement>;
