@@ -1,6 +1,5 @@
-import { error } from "console";
-
 const express = require('express');
+const cors = require('cors')
 const {readFile} = require('fs').promises;
 const path = require('path');
 const db = require('knex')({
@@ -17,6 +16,7 @@ const db = require('knex')({
 });
 
 const app = express();
+app.use(cors());
 app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({limit: '50mb'}));
 const port = 4000;
@@ -24,19 +24,12 @@ const mainFilePath = path.resolve(__dirname, "..", "client");
 app.use(express.static(mainFilePath));
 app.use(express.json());
 
-// db.select('*')  
-// .from('notestorage')
-// .then((data: any) => {
-//     console.log(data);
-// })
-// .catch((err: unknown) => {
-//     if(err instanceof Error) console.warn(err);
-// });
-
+//GET REQUEST THAT PASSES THE HOMEPAGE
 app.get('/', async (req: any, res: any) => {
     res.status(200).sendFile(path.resolve(mainFilePath, "index.html"));
 })
 
+//GET REQUEST TO PASS ALL NOTES
 app.get('/notes', async (req: any, res: any) => {
     try{
         const notes = await db.select('*').from('notestorage');
@@ -47,19 +40,57 @@ app.get('/notes', async (req: any, res: any) => {
     }   
 })
 
+//GET REQUEST TO GET ONE INDIVIDUAL NOTE: pass in ID as parameter
+app.get("/notes/:curID", async (req: any, res: any) => {
+    const {curID} = req.params;
+    try {   
+        const note = await db('notestorage').where('storedid', curID);
+        res.status(200).send(note);
+    } catch (error) {
+        res.status(500).send({error: "Could not find note"});
+    }
+})
+
+//POST REQUEST TO ADD A NOTE: pass in ID, content, createdDate and editedDate
 app.post('/notes', async (req: any, res: any) => {
     const {storedID, content, created, edited} = req.body;
     try{
         await db('notestorage').insert({
             storedid: storedID,
             content: JSON.stringify(content),
-            createddate: created,
+            createddate: created,  
             editeddate: edited
         });
         res.status("201").send({message: "NOTE HAS BEEN CREATED!"});
-    }
-    catch(err){
+    } catch(err){
         res.status(500).send(err);
+    }
+})
+
+//DELETE REQUEST TO DELETE A NOTE: pass in ID as parameter and it will be deleted
+app.delete('/notes/:curID', async(req: any, res: any) => {
+    const { curID } = req.params;
+    try{
+        await db('notestorage').where('storedid', curID).del();
+        res.status(200).send({message: "Note has been deleted"});
+    } catch(err){
+        res.status(500).send(err);
+    }
+})
+
+
+//PUT REQUEST TO EDIT NOTE: pass in ID as parameter, content and editeddate in body.
+app.put('/notes/:curID', async(req: any, res: any) => {
+    const { curID } = req.params;
+    const {content, edited} = req.body;
+    try {
+        await db('notestorage').where('storedid', curID).update({
+            content: content,
+            editeddate: edited
+        });
+        res.status(200).send({message: "Note has been updated"});
+    } catch (error) {
+        res.status(500).send({error: "Could not edit note"});
     }
 })
 

@@ -17,6 +17,7 @@ export class NoteList{
 
     render(notes: Note[]): void{
         this.notes = notes;
+        console.log(notes);
         this.noteContainer.innerHTML = '';
         this.notes.forEach(note => this.renderNote(note));
     }

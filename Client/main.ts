@@ -1,4 +1,5 @@
 import { StorageService } from "./services/StorageService.js";
+import { DBStorage } from "./services/DBStorage.js";
 import { NoteService } from "./services/NoteService.js";
 import { NoteList } from "./services/NoteList.js";
 import { BackGroundService } from "./services/BackGroundService.js";
@@ -96,8 +97,8 @@ import { UIManager } from "./services/UIManager.js";
         });
     }
 
-    private loadNotes(): void {
-        const notes = StorageService.loadNote();
+    private async loadNotes(): Promise<void> {
+        const notes = await DBStorage.getAllNotes();
         this.noteList.render(notes);
     }
  }
