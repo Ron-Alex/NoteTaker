@@ -66,17 +66,18 @@ import { UIManager } from "./services/UIManager.js";
                 const noteToBeEdited = this.UImanager.noteChange;
                 const editedNote = this.UImanager.returnEditorObject();
                 const selectedNote = document.querySelector(`[data-id="${noteToBeEdited}"]`);
-                let notes = StorageService.loadNote();
-                for(let i = 0; i < notes.length; i++){
-                    if(notes[i].storedID === noteToBeEdited)
-                    {
-                        notes[i].content = editedNote;
-                        break;
-                    }
-                }
+                // let notes = StorageService.loadNote();
+                // for(let i = 0; i < notes.length; i++){
+                //     if(notes[i].storedID === noteToBeEdited)
+                //     {
+                //         notes[i].content = editedNote;
+                //         break;
+                //     }
+                // }
                 if(selectedNote)
                 selectedNote.innerHTML = this.UImanager.returnEditorHTML();
-                StorageService.setNote(notes);
+                // StorageService.setNote(notes);
+                DBStorage.edit_Note(editedNote, new Date(), noteToBeEdited);
             }
 
             if(parentDiv)

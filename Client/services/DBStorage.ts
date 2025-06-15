@@ -63,12 +63,12 @@ export class DBStorage{
     static async edit_Note(content: NoteObj, edited: Date, current_ID: string){
         const response = await fetch("http://localhost:4000/notes/" + current_ID, {
             method: "put",
-            // headers: {
-            //     "Content-Type": "text/"
-            // },
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify({
                 content: JSON.stringify(content),
-                edited: edited
+                editeddate: edited
             })
         })
         if(!response.ok) throw new Error("Could not edit note");

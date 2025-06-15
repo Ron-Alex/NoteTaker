@@ -25,8 +25,9 @@ export class NoteService {
     }
 
     deleteNote(id: string): void{
-        this.notes = this.notes.filter(note => note.storedID !== id);
-        StorageService.setNote(this.notes);
+        // this.notes = this.notes.filter(note => note.storedID !== id);
+        // StorageService.setNote(this.notes);'
+        DBStorage.delete_curr_Note(id);
     }
 
     hideNote(note: HTMLElement): void{

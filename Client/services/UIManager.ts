@@ -153,7 +153,7 @@ export class UIManager{
 
     async editorMode(clickedNote: HTMLElement): Promise<void>{
         if (this.mode === "editorMode") return;
-        if (this.contentEditable === false) return;
+        if (this.contentEditable === false) return; 
         this.mode = "editorMode";
         this.editorParent = clickedNote;
         if(this.addButton) this.hideButton(this.addButton);
@@ -167,6 +167,7 @@ export class UIManager{
 
         this.currentEditor?.showEditor(this.editorParent!);
         this.currentEditor?.setContent(selected_Note_from_DB?.content);
+        this.clickedNoteObj = selected_Note_from_DB?.content;
 
         if(this.buttonContainer)
         clickedNote.insertAdjacentElement('afterend', this.buttonContainer)

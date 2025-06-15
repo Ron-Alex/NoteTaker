@@ -82,11 +82,11 @@ app.delete('/notes/:curID', async(req: any, res: any) => {
 //PUT REQUEST TO EDIT NOTE: pass in ID as parameter, content and editeddate in body.
 app.put('/notes/:curID', async(req: any, res: any) => {
     const { curID } = req.params;
-    const {content, edited} = req.body;
+    const {content, editeddate } = req.body;
     try {
         await db('notestorage').where('storedid', curID).update({
             content: content,
-            editeddate: edited
+            editeddate: editeddate
         });
         res.status(200).send({message: "Note has been updated"});
     } catch (error) {
