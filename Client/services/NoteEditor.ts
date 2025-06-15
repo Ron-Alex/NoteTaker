@@ -22,7 +22,6 @@ export class NoteEditor{
 
     removeEditor(): void{
         const toolbar = document.getElementsByClassName("ql-toolbar")[0] as HTMLElement;
-        console.log(this.container, toolbar);
         this.destroy(this.container);
         this.destroy(toolbar);
     }

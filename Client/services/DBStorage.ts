@@ -9,6 +9,7 @@ export class DBStorage{
         });
         if(!notes.ok) throw new Error("Failed to fetch notes");
         const rawData = await notes.json();
+        console.log(rawData);
         const parsedNotes = rawData.map((note: any) => ({
             storedID: note.storedid,
             content: JSON.parse(note.content),
@@ -27,10 +28,10 @@ export class DBStorage{
         }
         const parsedNote = await cur_Note.json();
         return {
-            storedID: parsedNote.storedID,
-            content: JSON.parse(parsedNote.content),
-            created: new Date(parsedNote.created),
-            edited: new Date(parsedNote.edited)
+            storedID: parsedNote[0].storedid,
+            content: JSON.parse(parsedNote[0].content),
+            created: new Date(parsedNote[0].createddate),
+            edited: new Date(parsedNote[0].editeddate)
         };
     }
 
@@ -43,16 +44,17 @@ export class DBStorage{
 
     static async add_Note(newNote: Note): Promise<void>
     {
+        console.log(newNote);
         const response = await fetch("http://localhost:4000/notes/", {
             method: 'post',
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                storedID: newNote.storedID,
-                content: JSON.stringify(newNote.content),
-                created: newNote.created,
-                edited: newNote.edited
+                storedid: newNote.storedID,
+                content: newNote.content,
+                createddate: newNote.created,
+                editeddate: newNote.edited
             })
         })
         if(!response.ok) throw new Error("Could not create Note");

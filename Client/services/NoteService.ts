@@ -1,5 +1,6 @@
 import { Note } from "../models/Note.js";
 import { NoteObj } from "../models/NoteObj.js";
+import { DBStorage } from "./DBStorage.js";
 import { StorageService } from "./StorageService.js";
 
 export class NoteService {
@@ -16,8 +17,10 @@ export class NoteService {
             created: new Date(),
             edited: new Date()
         }
-        this.notes.push(note);
-        StorageService.setNote(this.notes);
+        console.log(note);
+        // this.notes.push(note);
+        DBStorage.add_Note(note);
+        // StorageService.setNote(this.notes);
         return note;
     }
 

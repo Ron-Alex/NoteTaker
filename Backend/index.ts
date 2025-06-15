@@ -53,15 +53,15 @@ app.get("/notes/:curID", async (req: any, res: any) => {
 
 //POST REQUEST TO ADD A NOTE: pass in ID, content, createdDate and editedDate
 app.post('/notes', async (req: any, res: any) => {
-    const {storedID, content, created, edited} = req.body;
+    const {storedid, content, createddate, editeddate} = req.body;
     try{
         await db('notestorage').insert({
-            storedid: storedID,
+            storedid: storedid,
             content: JSON.stringify(content),
-            createddate: created,  
-            editeddate: edited
+            createddate: createddate,  
+            editeddate: editeddate
         });
-        res.status("201").send({message: "NOTE HAS BEEN CREATED!"});
+        res.status(200).send({message: "NOTE HAS BEEN CREATED!"});
     } catch(err){
         res.status(500).send(err);
     }

@@ -158,34 +158,25 @@ export class UIManager{
         this.editorParent = clickedNote;
         if(this.addButton) this.hideButton(this.addButton);
         const divID = clickedNote.getAttribute("data-id");
-        console.log(divID);
         let selected_Note_from_DB: Note | null = null;
         if(divID) {
             this.noteChange = divID;
             selected_Note_from_DB = await DBStorage.get_curr_Note(divID);
         }
         clickedNote.textContent = '';
-        console.log(selected_Note_from_DB);
 
-        // for(let i = 0; i < notes.length; i++)
-        // {
-        //     if(divID === notes[i].storedID)
-        //     {
-        //         this.currentEditor?.showEditor(this.editorParent!);
-        //         this.clickedNoteObj = notes[i].content;
-        //         this.currentEditor?.setContent(notes[i].content);
-        //         break;
-        //     }
-        // }
-        // if(this.buttonContainer)
-        // clickedNote.insertAdjacentElement('afterend', this.buttonContainer)
+        this.currentEditor?.showEditor(this.editorParent!);
+        this.currentEditor?.setContent(selected_Note_from_DB?.content);
 
-        // if(this.buttons.cancel && this.buttons.accept && this.buttons.delete)
-        // {
-        //     this.buttonContainer?.appendChild(this.buttons.delete);
-        //     this.buttonContainer?.appendChild(this.buttons.cancel);
-        //     this.buttonContainer?.appendChild(this.buttons.accept);
-        // }
+        if(this.buttonContainer)
+        clickedNote.insertAdjacentElement('afterend', this.buttonContainer)
+
+        if(this.buttons.cancel && this.buttons.accept && this.buttons.delete)
+        {
+            this.buttonContainer?.appendChild(this.buttons.delete);
+            this.buttonContainer?.appendChild(this.buttons.cancel);
+            this.buttonContainer?.appendChild(this.buttons.accept);
+        }
     }
 
     //Queries all addedNotes, turns them into a HTMLCollection, and loops through them checking for the input string.
