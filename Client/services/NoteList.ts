@@ -3,7 +3,6 @@ import { Note } from "../models/Note.js";
 import { TempEditor } from "./TempEditor.js";
 
 export class NoteList{
-    private notes: Note[] = [];
     private noteContainer: HTMLElement;
     private tempEditor = new TempEditor;
 
@@ -16,10 +15,8 @@ export class NoteList{
     }
 
     render(notes: Note[]): void{
-        this.notes = notes;
-        console.log(notes);
         this.noteContainer.innerHTML = '';
-        this.notes.forEach(note => this.renderNote(note));
+        notes.forEach(note => this.renderNote(note));
     }
 
     renderNote(note: Note): void{

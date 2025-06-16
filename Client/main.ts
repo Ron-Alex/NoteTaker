@@ -1,4 +1,3 @@
-import { StorageService } from "./services/StorageService.js";
 import { DBStorage } from "./services/DBStorage.js";
 import { NoteService } from "./services/NoteService.js";
 import { NoteList } from "./services/NoteList.js";
@@ -66,18 +65,20 @@ import { UIManager } from "./services/UIManager.js";
                 const noteToBeEdited = this.UImanager.noteChange;
                 const editedNote = this.UImanager.returnEditorObject();
                 const selectedNote = document.querySelector(`[data-id="${noteToBeEdited}"]`);
-                // let notes = StorageService.loadNote();
-                // for(let i = 0; i < notes.length; i++){
-                //     if(notes[i].storedID === noteToBeEdited)
-                //     {
-                //         notes[i].content = editedNote;
-                //         break;
-                //     }
-                // }
                 if(selectedNote)
                 selectedNote.innerHTML = this.UImanager.returnEditorHTML();
-                // StorageService.setNote(notes);
                 DBStorage.edit_Note(editedNote, new Date(), noteToBeEdited);
+            }
+
+            if(funcTarg.id === "signInButton"){
+                // console.log("WOOO");
+                const signInModal = document.querySelector("#signInModal");
+                const mainPage = document.querySelector(".mainPage");
+                signInModal?.classList.toggle("display-none");
+                // signInModal?.classList.toggle("bodyDarkMode");
+                // mainPage?.classList.toggle("display-none");
+                mainPage?.classList.toggle("display-filter");
+
             }
 
             if(parentDiv)

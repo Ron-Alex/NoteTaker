@@ -4,6 +4,7 @@
         <link rel="stylesheet" type="text/css" href="./Styles/styles.css">
         <link rel="stylesheet" type="text/css" href="./Styles/btnStyles.css">
         <link rel="stylesheet" type="text/css" href="./Styles/toggleStyles.css">
+        <link rel="stylesheet" type="text/css" href="./Styles/formStyles.css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
@@ -19,6 +20,7 @@
                         <input class="themeToggle checkbox" type="checkbox" value="0">
                         <span class="slider"></span>
                     </label>
+                    <button id="signInButton" class="bodyButton">Sign In</button>
                 </div>
             </div>
             <div class="mainBody">
@@ -28,6 +30,23 @@
                 </div>
                 <button type="button" class="addButton bodyButton">Add Note</button>
             </div>
+        </div>
+
+        <div id="signInModal" class="display-none">
+            <form class="form">
+                <p id="heading">Sign In</p>
+                <div class="field">
+                    <input autocomplete="off" placeholder="Username" class="textInput" type="text">
+                </div>
+                <div class="field">
+                    <input placeholder="Password" class="textInput" type="password">
+                </div>
+                <div class="btn">
+                    <button class="button1 bodyButton">Login</button>
+                    <button class="button2 bodyButton">Sign Up</button>
+                </div>
+                <button class="button3 bodyButton">Forgot Password</button>
+            </form>
         </div>
         <!--SCRIPTS-->
         <script type="module" src="./main.js"></script>

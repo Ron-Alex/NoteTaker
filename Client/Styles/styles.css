@@ -1,6 +1,7 @@
 /* ========== Layout and Body ========== */
 .docBody {
     font-family: "Space Grotesk", sans-serif;
+    height: 5000px;
 }
 
 .bodyDarkMode {
@@ -10,7 +11,6 @@
 
 .mainBody{
     margin: 0 5% 5% 5%;
-
 }
 
 /* ========== Typography ========== */
@@ -101,6 +101,35 @@ input:focus {
 
 p{
     margin: 2px 0 2px 0;
+}
+
+#signInModal{
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #F2F0EF;
+    border: 1px solid rgba(27, 31, 35, 0.15);
+    border-radius: 6px;
+}
+
+.bodyDarkMode #signInModal{
+    background-color: #212121;
+    color: white;
+    border: 1px solid white;
+
+}
+
+.display-none{
+    display: none;
+}
+
+.display-some{
+    display: "";
+}
+
+.display-filter{
+    filter: blur(.4em);
 }
 
 /* ========== Buttons ========== */
