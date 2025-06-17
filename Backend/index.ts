@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors')
 const {readFile} = require('fs').promises;
 const path = require('path');
+const bcrypt = require('bcrypt');
+
 const db = require('knex')({
     client: 'pg',
     connection: {
@@ -92,6 +94,10 @@ app.put('/notes/:curID', async(req: any, res: any) => {
     } catch (error) {
         res.status(500).send({error: "Could not edit note"});
     }
+})
+
+app.post("/register", (req: any, res: any) => {
+    const {username, email, password } = req.body();
 })
 
 app.listen(port, () => console.log(`App listening on port ${port}!`));

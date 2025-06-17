@@ -38,18 +38,42 @@
                     <p id="heading">Sign In</p>
                 </div>
                 <div class="field">
-                    <input autocomplete="off" placeholder="Username" class="textInput" type="text">
+                    <input autocomplete="off" placeholder="Email" class="textInput" type="text">
                 </div>
                 <div class="field">
                     <input placeholder="Password" class="textInput" type="password">
                 </div>
                 <div class="btn">
-                    <button type="button" id="modalCancelButton" class="button1 bodyButton">Cancel</button>
+                    <button type="button" id="signInCancelButton" class="button1 bodyButton">Cancel</button>
                     <button type="button" class="button2 bodyButton">Login</button>
                 </div>
                 <!-- <a href="/" id="FP button">Forgot Password</a> -->
                 <button type="button" class="button3 bodyButton">Forgot Password</button>
-                <button type="button" class="button4 bodyButton">Create Account</button>
+                <button type="button" id="createAcctButton" class="button4 bodyButton">Create Account</button>
+            </form>
+        </div>
+
+        <div id="registerModal" class="display-none">
+            <form class="form">
+                <div id="modalTop">
+                    <p id="heading">Register</p>
+                </div>
+                <div class="field">
+                    <input autocomplete="off" placeholder="Username" class="textInput" type="text">
+                </div>
+                <div class="field">
+                    <input autocomplete="off" placeholder="Email" class="textInput" type="email">
+                </div>
+                <div class="field">
+                    <input placeholder="Password" class="textInput" type="password">
+                </div>
+                <!-- <div class="btn">
+                    <button type="button" id="modalCancelButton" class="button1 bodyButton">Cancel</button>
+                    <button type="button" class="button2 bodyButton">Login</button>
+                </div> -->
+                <!-- <a href="/" id="FP button">Forgot Password</a> -->
+                <button type="button" id="cancelRegisterButton" class="button3 bodyButton">Cancel</button>
+                <button type="button" class= "button4 bodyButton">Create Account</button>
             </form>
         </div>
 

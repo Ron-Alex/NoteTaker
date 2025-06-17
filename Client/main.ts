@@ -70,8 +70,20 @@ import { UIManager } from "./services/UIManager.js";
                 DBStorage.edit_Note(editedNote, new Date(), noteToBeEdited);
             }
 
-            if(funcTarg.id === "signInButton" || funcTarg.id === "modalCancelButton"){
-                this.UImanager.modalViewToggle();
+            if(funcTarg.id === "signInButton" || funcTarg.id === "signInCancelButton"){
+                this.UImanager.signInModalViewToggle();
+                this.UImanager.toggle_Modal_BG_overlay();
+            }
+            
+            if(funcTarg.id === "createAcctButton"){
+                this.UImanager.registerModalViewToggle();
+            }
+
+            if(funcTarg.id === "cancelRegisterButton")
+            {
+                this.UImanager.signInModalViewToggle();
+                this.UImanager.registerModalViewToggle();
+                this.UImanager.toggle_Modal_BG_overlay();
             }
 
             if(parentDiv)

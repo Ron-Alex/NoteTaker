@@ -1,7 +1,7 @@
 import { NoteObj } from "../models/NoteObj.js";
 import { DBStorage } from "./DBStorage.js";
 import { NoteEditor } from "./NoteEditor.js";
-import { StorageService } from "./StorageService.js";
+// import { StorageService } from "./StorageService.js";
 import { TempEditor } from "./TempEditor.js";
 import { Note } from "../models/Note.js";
 
@@ -89,13 +89,22 @@ export class UIManager{
         return button;
     }
 
-    modalViewToggle(){
-        const signInModal = document.querySelector("#signInModal");
-        const mainPage = document.querySelector(".mainPage");
+    toggle_Modal_BG_overlay(){
         const overlay = document.querySelector("#overlay");
-        signInModal?.classList.toggle("display-none");
-        overlay?.classList.toggle("display-none");
+        const mainPage = document.querySelector(".mainPage");
         mainPage?.classList.toggle("display-filter");
+        overlay?.classList.toggle("display-none");
+    }
+
+    signInModalViewToggle(){
+        const signInModal = document.querySelector("#signInModal");
+        signInModal?.classList.toggle("display-none");
+    }
+
+    registerModalViewToggle(){
+        const registerModal = document.querySelector("#registerModal");
+        registerModal?.classList.toggle("display-none");
+        this.signInModalViewToggle();
     }
 
     insertMode(): void{
