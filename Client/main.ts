@@ -70,15 +70,8 @@ import { UIManager } from "./services/UIManager.js";
                 DBStorage.edit_Note(editedNote, new Date(), noteToBeEdited);
             }
 
-            if(funcTarg.id === "signInButton"){
-                // console.log("WOOO");
-                const signInModal = document.querySelector("#signInModal");
-                const mainPage = document.querySelector(".mainPage");
-                signInModal?.classList.toggle("display-none");
-                // signInModal?.classList.toggle("bodyDarkMode");
-                // mainPage?.classList.toggle("display-none");
-                mainPage?.classList.toggle("display-filter");
-
+            if(funcTarg.id === "signInButton" || funcTarg.id === "modalCancelButton"){
+                this.UImanager.modalViewToggle();
             }
 
             if(parentDiv)

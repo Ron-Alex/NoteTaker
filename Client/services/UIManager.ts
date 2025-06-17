@@ -89,6 +89,15 @@ export class UIManager{
         return button;
     }
 
+    modalViewToggle(){
+        const signInModal = document.querySelector("#signInModal");
+        const mainPage = document.querySelector(".mainPage");
+        const overlay = document.querySelector("#overlay");
+        signInModal?.classList.toggle("display-none");
+        overlay?.classList.toggle("display-none");
+        mainPage?.classList.toggle("display-filter");
+    }
+
     insertMode(): void{
         if(this.mode === "insertMode") return;
         this.mode = "insertMode";

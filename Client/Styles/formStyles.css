@@ -59,10 +59,10 @@
   color: white; */
 }
 
-/* .button1:hover {
-  background-color: black;
+.button1:hover {
+  background-color: #666666;
   color: white;
-} */
+}
 
 .button2 {
   padding: 0.5em;
@@ -76,10 +76,10 @@
   color: white; */
 }
 
-/* .button2:hover {
-  background-color: black;
+.button2:hover {
+  background-color: #666666;
   color: white;
-} */
+}
 
 .button3 {
   /* margin-bottom: 3em; */
@@ -92,7 +92,23 @@
   color: white; */
 }
 
+.button4 {
+  /* margin-bottom: 3em; */
+  padding: 0.5em;
+  border-radius: 5px;
+  /* border: none; */
+  outline: none;
+  transition: .4s ease-in-out;
+  /* background-color: #252525;
+  color: white; */
+}
+
 .button3:hover {
   background-color: red;
+  color: white;
+}
+
+.button4:hover {
+  background-color: green;
   color: white;
 }
