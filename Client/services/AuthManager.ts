@@ -6,11 +6,15 @@ export class AuthManager{
         
     }
 
-    getUser(): string{
+    getUser(): string | null{
         if(this.currentUser){
             return this.currentUser;
         }
-        return "";
+        return null;
+    }
+
+    getAuthorized(): boolean{
+        return this.authorized;
     }
 
     setUser(user_id: string): void{

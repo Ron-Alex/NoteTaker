@@ -1,6 +1,6 @@
 import { Note } from "../models/Note.js";
 import { NoteObj } from "../models/NoteObj.js";
-import { DBStorage } from "./DBStorage.js";
+import { DBStorage } from "../Storage/DBStorage.js";
 
 export class NoteService {
 

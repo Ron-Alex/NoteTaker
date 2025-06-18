@@ -1,8 +1,9 @@
 import { NoteObj } from "../models/NoteObj.js";
-import { DBStorage } from "./DBStorage.js";
-import { NoteEditor } from "./NoteEditor.js";
+import { DBStorage } from "../Storage/DBStorage.js";
+import { NoteEditor } from "../Editor/NoteEditor.js";
 // import { StorageService } from "./StorageService.js";
-import { TempEditor } from "./TempEditor.js";
+import { TempEditor } from "../Editor/TempEditor.js";
+import { ElementMananger } from "./ElementManager.js";
 import { Note } from "../models/Note.js";
 
 type Mode = "viewMode" | "insertMode" | "editorMode";
@@ -12,6 +13,7 @@ export class UIManager{
     private currentEditor: NoteEditor | null = null;
     private mode: Mode = "viewMode";
     private tempEditor = new TempEditor;
+    private elementManager = new ElementMananger;
     contentEditable: boolean = true;
 
     private buttons = {
@@ -39,19 +41,15 @@ export class UIManager{
         this.currentEditor = new NoteEditor(this.editorContainer);
         this.makeButtonArea();
 
-        this.buttons.submit = this.makeButton("Submit", "submitButton");
-        this.buttons.cancel = this.makeButton("Cancel", "cancelButton");
-        this.buttons.accept = this.makeButton("Accept", "acceptButton");
-        this.buttons.delete = this.makeButton("Delete Note", "deleteButton");
+        this.buttons.submit = this.elementManager.makeButton("Submit", "submitButton");
+        this.buttons.cancel = this.elementManager.makeButton("Cancel", "cancelButton");
+        this.buttons.accept = this.elementManager.makeButton("Accept", "acceptButton");
+        this.buttons.delete = this.elementManager.makeButton("Delete Note", "deleteButton");
     }
 
     makeButtonArea(): void{
         const newContainer = document.createElement("div");
         this.buttonContainer = newContainer;
-    }
-
-    removeButtonArea(buttonArea: HTMLElement):void{
-        buttonArea.remove();
     }
 
     returnEditorObject(): NoteObj{
@@ -66,27 +64,6 @@ export class UIManager{
 
     returnEditorText(): string{
         return this.currentEditor?.getText()!;
-    }
-    
-    makeButton(text: string, newClass: string): HTMLElement{
-        const newButton = document.createElement('button');
-        newButton.classList.add("bodyButton", newClass);
-        newButton.textContent = text;
-        return newButton;
-    }
-
-    killButton(button: HTMLElement): void{
-        button.remove();
-    }
-
-    hideButton(button: HTMLElement): HTMLElement{
-        button.style.display = "none";
-        return button;
-    }
-
-    viewButton(button: HTMLElement): HTMLElement{
-        button.style.display = "";
-        return button;
     }
 
     toggle_Modal_BG_overlay(){
@@ -112,7 +89,7 @@ export class UIManager{
         this.mode = "insertMode";
         this.editorParent = document.querySelector("#editorArea")!;
         
-        if(this.addButton) this.hideButton(this.addButton);
+        if(this.addButton) this.elementManager.hideButton(this.addButton);
 
         if(this.buttonContainer)
         {
@@ -133,10 +110,10 @@ export class UIManager{
 
     viewMode(): void{
         if(this.mode === "viewMode") return;
-        if(this.addButton) this.viewButton(this.addButton);
+        if(this.addButton) this.elementManager.viewButton(this.addButton);
         this.contentEditable = true;
         if(this.buttonContainer)
-        this.removeButtonArea(this.buttonContainer);
+        this.elementManager.removeButtonArea(this.buttonContainer);
         if(this.mode === "insertMode")
         {
             this.mode = "viewMode";
@@ -146,20 +123,20 @@ export class UIManager{
             }
             if(this.buttons.cancel && this.buttons.submit)
             {
-                this.killButton(this.buttons.cancel);
-                this.killButton(this.buttons.submit);
+                this.elementManager.killButton(this.buttons.cancel);
+                this.elementManager.killButton(this.buttons.submit);
             }
             if(this.buttonContainer)
-            this.removeButtonArea(this.buttonContainer);
+            this.elementManager.removeButtonArea(this.buttonContainer);
         }
         if(this.mode === "editorMode")
         {
             this.mode = "viewMode";
             if(this.buttons.delete && this.buttons.accept && this.buttons.cancel)
             {
-                this.killButton(this.buttons.delete);
-                this.killButton(this.buttons.accept);
-                this.killButton(this.buttons.cancel);
+                this.elementManager.killButton(this.buttons.delete);
+                this.elementManager.killButton(this.buttons.accept);
+                this.elementManager.killButton(this.buttons.cancel);
             }
             this.currentEditor?.removeEditor();
             if(this.clickedNoteObj)
@@ -174,7 +151,7 @@ export class UIManager{
         if (this.contentEditable === false) return; 
         this.mode = "editorMode";
         this.editorParent = clickedNote;
-        if(this.addButton) this.hideButton(this.addButton);
+        if(this.addButton) this.elementManager.hideButton(this.addButton);
         const divID = clickedNote.getAttribute("data-id");
         let selected_Note_from_DB: Note | null = null;
         if(divID) {

@@ -1,6 +1,6 @@
 //all functions for the NoteList including Drag and Drop
 import { Note } from "../models/Note.js";
-import { TempEditor } from "./TempEditor.js";
+import { TempEditor } from "../Editor/TempEditor.js";
 
 export class NoteList{
     private noteContainer: HTMLElement;

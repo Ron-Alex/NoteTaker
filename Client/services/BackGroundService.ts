@@ -1,4 +1,4 @@
-import { StorageService } from "./StorageService.js";
+import { StorageService } from "../Storage/StorageService.js";
 
 export class BackGroundService{
     private isDark: boolean = false;

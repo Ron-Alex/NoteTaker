@@ -1,8 +1,8 @@
-import { DBStorage } from "./services/DBStorage.js";
+import { DBStorage } from "./Storage/DBStorage.js";
 import { NoteService } from "./services/NoteService.js";
 import { NoteList } from "./services/NoteList.js";
 import { BackGroundService } from "./services/BackGroundService.js";
-import { UIManager } from "./services/UIManager.js";
+import { UIManager } from "./UI/UIManager.js";
 import { AuthManager } from "./services/AuthManager.js";
 
  class NoteApp {

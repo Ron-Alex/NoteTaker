@@ -1,5 +1,7 @@
 import { NoteObj } from "../models/NoteObj";
 
+declare const Quill: any;
+
 export class NoteEditor{
     private quill: any;
     private container: HTMLElement;
@@ -47,10 +49,10 @@ export class NoteEditor{
     }
 
     destroy(container: HTMLElement): void{
-        if(!container)
-        {
-            console.warn("ALLAH");
-        }
+        // if(!container)
+        // {
+        //     console.warn("ALLAH");
+        // }
         container.remove();
     }
 }

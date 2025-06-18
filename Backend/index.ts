@@ -112,7 +112,8 @@ app.post("/register", async (req: any, res: any) => {
             username: username,
             email: email,
             password: hash,
-            user_id: crypto.randomUUID()
+            user_id: crypto.randomUUID(),
+            joined: new Date()
         })
         .into('users')
         .returning('user_id')
