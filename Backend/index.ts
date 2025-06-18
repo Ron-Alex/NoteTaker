@@ -1,8 +1,16 @@
+import { UUID } from "crypto";
+
 const express = require('express');
 const cors = require('cors')
 const {readFile} = require('fs').promises;
 const path = require('path');
 const bcrypt = require('bcrypt');
+const dotenv = require('dotenv');
+const jwt = require('jsonwebtoken');
+
+dotenv.config();
+
+// type UUID = string;
 
 const db = require('knex')({
     client: 'pg',
@@ -21,7 +29,7 @@ const app = express();
 app.use(cors());
 app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({limit: '50mb'}));
-const port = 4000;
+// const port = 4000;
 const mainFilePath = path.resolve(__dirname, "..", "client");
 app.use(express.static(mainFilePath));
 app.use(express.json());
@@ -34,7 +42,7 @@ app.get('/', async (req: any, res: any) => {
 //GET REQUEST TO PASS ALL NOTES
 app.get('/notes', async (req: any, res: any) => {
     try{
-        const notes = await db.select('*').from('notestorage');
+        const notes = await db.select('*').from('notestorage').orderBy('editeddate', 'asc');
         res.status(200).send(notes);
     }
     catch{
@@ -96,8 +104,25 @@ app.put('/notes/:curID', async(req: any, res: any) => {
     }
 })
 
-app.post("/register", (req: any, res: any) => {
-    const {username, email, password } = req.body();
+app.post("/register", async (req: any, res: any) => {
+    const {username, email, password } = req.body;
+    const hash = await bcrypt.hash(password, 10);
+    await db.transaction((trx: any) => {
+        trx.insert({
+            username: username,
+            email: email,
+            password: hash,
+            user_id: crypto.randomUUID()
+        })
+        .into('users')
+        .returning('user_id')
+        .then((ids: {user_id: string}[]) =>
+            res.status(201).json({user_id: ids[0].user_id})
+        )
+        .then(trx.commit)
+        .catch(trx.rollback)
+    })
+    .catch(() => res.status(400).send('Unable to Register'));
 })
 
-app.listen(port, () => console.log(`App listening on port ${port}!`));
+app.listen(process.env.PORT, () => console.log(`App listening on port ${process.env.PORT}!`));

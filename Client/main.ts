@@ -3,18 +3,21 @@ import { NoteService } from "./services/NoteService.js";
 import { NoteList } from "./services/NoteList.js";
 import { BackGroundService } from "./services/BackGroundService.js";
 import { UIManager } from "./services/UIManager.js";
+import { AuthManager } from "./services/AuthManager.js";
 
  class NoteApp {
     private noteService: NoteService;
     private noteList: NoteList;
     private bgService: BackGroundService;
     private UImanager: UIManager;
+    private authManager: AuthManager;
 
     constructor() {
         this.noteService = new NoteService;
         this.noteList = new NoteList(document.getElementById("mainContent")!);
         this.bgService = new BackGroundService;
         this.UImanager = new UIManager;
+        this.authManager = new AuthManager;
         this.setUpEventListeners();
         this.loadNotes();
     }
@@ -74,7 +77,7 @@ import { UIManager } from "./services/UIManager.js";
                 this.UImanager.signInModalViewToggle();
                 this.UImanager.toggle_Modal_BG_overlay();
             }
-            
+
             if(funcTarg.id === "createAcctButton"){
                 this.UImanager.registerModalViewToggle();
             }
@@ -86,6 +89,28 @@ import { UIManager } from "./services/UIManager.js";
                 this.UImanager.toggle_Modal_BG_overlay();
             }
 
+            if(funcTarg.id === "submit_Create_Acct_Btn"){
+                const usernameField = document.querySelector("#register_userName_field") as HTMLInputElement;
+                const emailField = document.querySelector("#register_email_field") as HTMLInputElement;
+                const passwordField = document.querySelector("#register_password_field") as HTMLInputElement;
+
+                const userName = usernameField?.value;
+                const email = emailField?.value;
+                const password = passwordField?.value;
+
+                if (userName && email && password) {
+                    this.authManager.registerUser(userName, email, password)
+                    .then(response => {
+                        this.authManager.setUser(response);
+                    }).then(() => {
+                        console.log(this.authManager.getUser());
+                    })
+                }
+                this.UImanager.registerModalViewToggle();
+                this.UImanager.signInModalViewToggle();
+                this.UImanager.toggle_Modal_BG_overlay();
+            }
+
             if(parentDiv)
             {
                 this.UImanager.editorMode(parentDiv);
@@ -94,7 +119,6 @@ import { UIManager } from "./services/UIManager.js";
         
         document.querySelector(".searchBar")?.addEventListener("input", (e) => {
             const wordTarg = e.target as HTMLInputElement;
-            console.log(wordTarg.value);
             if(wordTarg.value)
                 this.UImanager.searchMode(wordTarg.value);
             })
