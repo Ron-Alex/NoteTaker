@@ -1,5 +1,6 @@
 import { DBStorage } from "./Storage/DBStorage.js";
 import { NoteService } from "./services/NoteService.js";
+import { StorageService } from "./Storage/StorageService.js";
 import { NoteList } from "./services/NoteList.js";
 import { BackGroundService } from "./services/BackGroundService.js";
 import { UIManager } from "./UI/UIManager.js";
@@ -19,7 +20,7 @@ import { AuthManager } from "./services/AuthManager.js";
         this.UImanager = new UIManager;
         this.authManager = new AuthManager;
         this.setUpEventListeners();
-        this.loadNotes();
+        this.loadLSNotes();
     }
 
     private setUpEventListeners(): void {
@@ -101,14 +102,35 @@ import { AuthManager } from "./services/AuthManager.js";
                 if (userName && email && password) {
                     this.authManager.registerUser(userName, email, password)
                     .then(response => {
-                        this.authManager.setUser(response);
+                        this.authManager.setUser(response.user_id);
+                        this.authManager.setToken(response.token);
                     }).then(() => {
-                        console.log(this.authManager.getUser());
-                    })
+                        this.authManager.setAuthorize(true);
+                    });
+                }
+                if(this.authManager.getUser()){
+                    StorageService.saveToken(this.authManager.getUser()!);
                 }
                 this.UImanager.registerModalViewToggle();
                 this.UImanager.signInModalViewToggle();
                 this.UImanager.toggle_Modal_BG_overlay();
+            }
+
+            if(funcTarg.id === "loginButton") {
+                const emailField = document.querySelector("#signin_email_field") as HTMLInputElement;
+                const passwordField = document.querySelector("#signin_password_field") as HTMLInputElement;
+
+                const email = emailField?.value;
+                const password = passwordField?.value;
+
+                if(email && password)
+                {
+                    this.authManager.signIn(email, password)
+                    .then((response) => {
+                        this.authManager.setToken(response.token);
+                        this.loadDBNotes();
+                    })
+                }
             }
 
             if(parentDiv)
@@ -128,8 +150,13 @@ import { AuthManager } from "./services/AuthManager.js";
         });
     }
 
-    private async loadNotes(): Promise<void> {
+    private async loadDBNotes(): Promise<void> {
         const notes = await DBStorage.getAllNotes();
+        this.noteList.render(notes);
+    }
+
+    private loadLSNotes(): void{
+        const notes = StorageService.loadNote();
         this.noteList.render(notes);
     }
  }

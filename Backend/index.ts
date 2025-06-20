@@ -8,6 +8,8 @@ const bcrypt = require('bcrypt');
 const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
 
+const notesContr = require('./Controllers/Notes');
+
 dotenv.config();
 
 // type UUID = string;
@@ -29,53 +31,40 @@ const app = express();
 app.use(cors());
 app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({limit: '50mb'}));
-// const port = 4000;
 const mainFilePath = path.resolve(__dirname, "..", "client");
 app.use(express.static(mainFilePath));
 app.use(express.json());
+
+const makeJWT = (user_id: string) => {
+    return jwt.sign({user_id}, process.env.JWT_SECRET as string, { expiresIn: '1h' });
+}
+
+function verifyToken(req: any, res: any, next: any) {   
+    const token = req.headers.authorization?.split(" ")[1];
+    if(!token) return res.status(401).send("No Token");
+    try{
+        const decoded_id = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = decoded_id;
+        next();
+    }
+    catch{
+        res.status(403).send("Invalid Token!")
+    }
+}
 
 //GET REQUEST THAT PASSES THE HOMEPAGE
 app.get('/', async (req: any, res: any) => {
     res.status(200).sendFile(path.resolve(mainFilePath, "index.html"));
 })
 
-//GET REQUEST TO PASS ALL NOTES
-app.get('/notes', async (req: any, res: any) => {
-    try{
-        const notes = await db.select('*').from('notestorage').orderBy('editeddate', 'asc');
-        res.status(200).send(notes);
-    }
-    catch{
-        res.status(500).send({ error: "FAILED TO FETCH NOTES"});
-    }   
-})
+//GET REQUEST TO PASS ALL NOTES OF ONE USER
+app.get('/notes', verifyToken, async (req: any, res: any) => notesContr.get_all_notes(req, res, db));
 
 //GET REQUEST TO GET ONE INDIVIDUAL NOTE: pass in ID as parameter
-app.get("/notes/:curID", async (req: any, res: any) => {
-    const {curID} = req.params;
-    try {   
-        const note = await db('notestorage').where('storedid', curID);
-        res.status(200).send(note);
-    } catch (error) {
-        res.status(500).send({error: "Could not find note"});
-    }
-})
+app.get("/notes/:curID", verifyToken, async (req: any, res: any) => notesContr.get_indiv_note(req, res, db));
 
 //POST REQUEST TO ADD A NOTE: pass in ID, content, createdDate and editedDate
-app.post('/notes', async (req: any, res: any) => {
-    const {storedid, content, createddate, editeddate} = req.body;
-    try{
-        await db('notestorage').insert({
-            storedid: storedid,
-            content: JSON.stringify(content),
-            createddate: createddate,  
-            editeddate: editeddate
-        });
-        res.status(200).send({message: "NOTE HAS BEEN CREATED!"});
-    } catch(err){
-        res.status(500).send(err);
-    }
-})
+app.post('/notes', verifyToken, async (req: any, res: any) => notesContr.make_note(req, res, db));
 
 //DELETE REQUEST TO DELETE A NOTE: pass in ID as parameter and it will be deleted
 app.delete('/notes/:curID', async(req: any, res: any) => {
@@ -86,7 +75,7 @@ app.delete('/notes/:curID', async(req: any, res: any) => {
     } catch(err){
         res.status(500).send(err);
     }
-})
+}) 
 
 
 //PUT REQUEST TO EDIT NOTE: pass in ID as parameter, content and editeddate in body.
@@ -116,14 +105,52 @@ app.post("/register", async (req: any, res: any) => {
             joined: new Date()
         })
         .into('users')
-        .returning('user_id')
-        .then((ids: {user_id: string}[]) =>
-            res.status(201).json({user_id: ids[0].user_id})
-        )
+        .returning(['user_id', 'username'])
+        .then((ids: {user_id: string}[]) => {
+            // console.log(ids);
+            const token = makeJWT(ids[0].user_id);
+            res.status(201).json({
+                username: ids[0].user_id,
+                token: token
+            })
+        })
         .then(trx.commit)
         .catch(trx.rollback)
-    })
+    })  
     .catch(() => res.status(400).send('Unable to Register'));
+})
+
+app.post("/signin", async (req: any, res: any) => {
+    const { email, password } = req.body;
+        db.select("email", "password", "user_id")
+        .from("users")
+        .where("email", email)
+        .then(async (data: Array<any>) => {
+            // console.log(data);
+            const PWMatch = await bcrypt.compare(password, data[0].password);
+            // console.log(PWMatch);
+            if(PWMatch){
+                db.select("*")
+                .from("notestorage")
+                .where("user_id", data[0].user_id)
+                .then((nData: any) => {
+                    // console.log(nData);
+                    res.status(200).json({
+                        data: nData,
+                        token: makeJWT(data[0].user_id)
+                    });
+                })
+                // const token = makeJWT(data[0].user_id);
+                // const newData = notesContr.get_all_notes()
+            }
+            else{
+                res.status(400).send("Wrong Credentials");
+            }
+        })
+        .catch((err: any) => {
+            console.error(err);
+            res.status(400).send("Wrong credentials");
+        });
 })
 
 app.listen(process.env.PORT, () => console.log(`App listening on port ${process.env.PORT}!`));

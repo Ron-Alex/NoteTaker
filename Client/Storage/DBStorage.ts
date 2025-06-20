@@ -1,27 +1,40 @@
 import { Note } from "../models/Note";
 import { NoteObj } from "../models/NoteObj";
+import { StorageService } from "./StorageService.js";
 
 export class DBStorage{
 
     static async getAllNotes(): Promise<any>{
-        const notes = await fetch("http://localhost:4000/notes", {
-            method: "get"
-        });
-        if(!notes.ok) throw new Error("Failed to fetch notes");
-        const rawData = await notes.json();
-        console.log(rawData);
-        const parsedNotes = rawData.map((note: any) => ({
-            storedID: note.storedid,
-            content: JSON.parse(note.content),
-            created: new Date(note.createddate),
-            edited: new Date(note.editeddate)
-        }));
-        return parsedNotes;
+        const token = StorageService.getToken();
+        if(token){
+            const notes = await fetch("http://localhost:4000/notes", {
+                method: "get",
+                headers: {
+                    'Content-Type': "application/json",
+                    'Authorization': `Bearer ${token}`  //If token is null its handled in the backend
+                }
+            });
+            if(!notes.ok) throw new Error("Failed to fetch notes");
+            const rawData = await notes.json();
+            // console.log(rawData);
+            const parsedNotes = rawData.map((note: any) => ({
+                storedID: note.storedid,
+                content: JSON.parse(note.content),
+                created: new Date(note.createddate),
+                edited: new Date(note.editeddate)
+            }));
+            return parsedNotes;
+        }
     }
 
     static async get_curr_Note(current_ID: string): Promise<Note> {
+        const token = StorageService.getToken();
         const cur_Note = await fetch("http://localhost:4000/notes/" + current_ID, {
-            method: 'get'
+            method: 'get',
+            headers: {
+                'Content-Type': "application/json",
+                'Authorization': `Bearer ${token}`  //If token is null its handled in the backend
+            }
         });
         if(!cur_Note.ok){
             throw new Error("Failed to get note");
