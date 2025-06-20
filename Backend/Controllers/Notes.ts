@@ -1,6 +1,6 @@
 const get_all_notes = async (req: any, res: any, db: any) => {
     try{
-        const notes = await db('notestorage').where({user_id: req.user.user_id}).orderBy('edited', 'asc');
+        const notes = await db('notestorage').where({user_id: req.user.user_id}).orderBy('createddate', 'asc');
         res.status(200).send(notes);
     }
     catch{

@@ -48,13 +48,17 @@ function verifyToken(req: any, res: any, next: any) {
         next();
     }
     catch{
-        res.status(403).send("Invalid Token!")
+        res.status(403).send("Invalid Token!");
     }
 }
 
 //GET REQUEST THAT PASSES THE HOMEPAGE
 app.get('/', async (req: any, res: any) => {
     res.status(200).sendFile(path.resolve(mainFilePath, "index.html"));
+})
+
+app.get('/verify', verifyToken, async (req: any, res: any) => {
+    res.status(200).send("JWT verified");
 })
 
 //GET REQUEST TO PASS ALL NOTES OF ONE USER
@@ -98,7 +102,7 @@ app.post("/register", async (req: any, res: any) => {
     const hash = await bcrypt.hash(password, 10);
     await db.transaction((trx: any) => {
         trx.insert({
-            username: username,
+            username: username, 
             email: email,
             password: hash,
             user_id: crypto.randomUUID(),
@@ -130,16 +134,16 @@ app.post("/signin", async (req: any, res: any) => {
             const PWMatch = await bcrypt.compare(password, data[0].password);
             // console.log(PWMatch);
             if(PWMatch){
-                db.select("*")
-                .from("notestorage")
-                .where("user_id", data[0].user_id)
-                .then((nData: any) => {
-                    // console.log(nData);
-                    res.status(200).json({
-                        data: nData,
-                        token: makeJWT(data[0].user_id)
-                    });
-                })
+                res.status(200).json({
+                    token: makeJWT(data[0].user_id)
+                });
+                // db.select("*")
+                // .from("notestorage")
+                // .where("user_id", data[0].user_id)
+                // .then((nData: any) => {
+                //     // console.log(nData);  
+
+                // })
                 // const token = makeJWT(data[0].user_id);
                 // const newData = notesContr.get_all_notes()
             }

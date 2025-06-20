@@ -128,8 +128,11 @@ import { AuthManager } from "./services/AuthManager.js";
                     this.authManager.signIn(email, password)
                     .then((response) => {
                         this.authManager.setToken(response.token);
+                    }).then(() => {
                         this.loadDBNotes();
-                    })
+                        this.UImanager.signInModalViewToggle();
+                        this.UImanager.toggle_Modal_BG_overlay();
+                    }).catch((err) => {throw new Error("Could not resolve notes")});
                 }
             }
 

@@ -5,7 +5,8 @@ import { StorageService } from "./StorageService.js";
 export class DBStorage{
 
     static async getAllNotes(): Promise<any>{
-        const token = StorageService.getToken();
+        const token =  StorageService.getToken();
+        console.log(token);
         if(token){
             const notes = await fetch("http://localhost:4000/notes", {
                 method: "get",
