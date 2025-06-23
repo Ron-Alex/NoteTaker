@@ -6,7 +6,6 @@ export class DBStorage{
 
     static async getAllNotes(): Promise<any>{
         const token =  StorageService.getToken();
-        console.log(token);
         if(token){
             const notes = await fetch("http://localhost:4000/notes", {
                 method: "get",
@@ -50,19 +49,25 @@ export class DBStorage{
     }
 
     static async delete_curr_Note(current_ID: string): Promise<void>{
+        const token = StorageService.getToken();
         const response = await fetch("http://localhost:4000/notes/" + current_ID, {
-            method: "delete"
+            method: "delete",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
         })
         if(!response.ok) throw new Error("Could not delete Note");
     }
 
     static async add_Note(newNote: Note): Promise<void>
     {
-        console.log(newNote);
+        const token = StorageService.getToken();
         const response = await fetch("http://localhost:4000/notes/", {
             method: 'post',
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify({
                 storedid: newNote.storedID,

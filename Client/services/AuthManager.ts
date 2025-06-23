@@ -5,7 +5,16 @@ export class AuthManager{
     private authorized: boolean = false;
 
     constructor(){
-        
+        this.init();
+    }
+
+    async init(){
+        const token = StorageService.getToken();
+        if(token){
+            const valid = await this.initVerify(token);
+            if(valid) this.authorized = true;
+            else StorageService.clearToken();
+        }
     }
 
     getUser(): string | null{
@@ -29,6 +38,20 @@ export class AuthManager{
 
     setToken(token: string): void {
         StorageService.saveToken(token);
+    }
+
+    async initVerify(token: string){
+        const response = await fetch("http://localhost:4000/verify", {
+            method: "get",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        })
+        if(!response.ok) {
+            throw new Error("Token not verified");
+        }
+        return true;
     }
 
     async registerUser(userName: string, email: string, password: string): Promise<any>{

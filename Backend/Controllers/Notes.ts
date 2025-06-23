@@ -34,8 +34,34 @@ const make_note = async (req: any, res: any, db: any) => {
     }
 }
 
+const delete_note = async (req: any, res: any, db: any) => {
+    const {curID} = req.params;
+    try{
+        await db('notestorage').where('storedid', curID).andWhere({user_id: req.user.user_id}).del();
+        res.status(200).send({message: "Note has been deleted"});
+    } catch(err){
+        res.status(500).send(err);
+    }
+}
+
+const edit_note = async (req: any, res: any, db: any) => {
+    const { curID } = req.params;
+    const {content, editeddate } = req.body;
+    try {
+        await db('notestorage').where('storedid', curID).update({
+            content: content,
+            editeddate: editeddate
+        });
+        res.status(200).send({message: "Note has been updated"});
+    } catch (error) {   
+        res.status(500).send({error: "Could not edit note"});
+    }
+}
+
 module.exports = {
     get_all_notes: get_all_notes,
-    get_indiv_note:get_indiv_note,
-    make_note: make_note
+    get_indiv_note: get_indiv_note,
+    delete_note: delete_note,
+    make_note: make_note,
+    edit_note: edit_note
 };  

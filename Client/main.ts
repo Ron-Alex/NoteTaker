@@ -20,7 +20,14 @@ import { AuthManager } from "./services/AuthManager.js";
         this.UImanager = new UIManager;
         this.authManager = new AuthManager;
         this.setUpEventListeners();
-        this.loadLSNotes();
+        this.init();
+    }
+
+    async init(){
+        await this.authManager.init();
+        const authStatus = await this.authManager.getAuthorized();
+        if(authStatus) this.loadDBNotes();
+        else this.loadLSNotes();
     }
 
     private setUpEventListeners(): void {
@@ -77,14 +84,14 @@ import { AuthManager } from "./services/AuthManager.js";
             if(funcTarg.id === "signInButton" || funcTarg.id === "signInCancelButton"){
                 this.UImanager.signInModalViewToggle();
                 this.UImanager.toggle_Modal_BG_overlay();
+                this.UImanager.alertToggle(false);
             }
 
             if(funcTarg.id === "createAcctButton"){
                 this.UImanager.registerModalViewToggle();
             }
 
-            if(funcTarg.id === "cancelRegisterButton")
-            {
+            if(funcTarg.id === "cancelRegisterButton"){
                 this.UImanager.signInModalViewToggle();
                 this.UImanager.registerModalViewToggle();
                 this.UImanager.toggle_Modal_BG_overlay();
@@ -98,6 +105,7 @@ import { AuthManager } from "./services/AuthManager.js";
                 const userName = usernameField?.value;
                 const email = emailField?.value;
                 const password = passwordField?.value;
+                
 
                 if (userName && email && password) {
                     this.authManager.registerUser(userName, email, password)
@@ -106,6 +114,10 @@ import { AuthManager } from "./services/AuthManager.js";
                         this.authManager.setToken(response.token);
                     }).then(() => {
                         this.authManager.setAuthorize(true);
+                        usernameField.value = "";
+                        emailField.value = "";
+                        passwordField.value = "";
+                        this.UImanager.signedInMode();
                     });
                 }
                 if(this.authManager.getUser()){
@@ -132,8 +144,27 @@ import { AuthManager } from "./services/AuthManager.js";
                         this.loadDBNotes();
                         this.UImanager.signInModalViewToggle();
                         this.UImanager.toggle_Modal_BG_overlay();
-                    }).catch((err) => {throw new Error("Could not resolve notes")});
+                    })
+                    .then(() => {
+                        this.UImanager.signedInMode();
+                        this.authManager.setAuthorize(true);
+                        emailField.value = "";
+                        passwordField.value = "";
+                    })
+                    .catch((err) => {
+                        passwordField.value = "";
+                        this.UImanager.alertToggle(true);
+                        throw new Error("Could not resolve notes");
+                    });
                 }
+            }
+
+            if(funcTarg.classList.contains("signOutButton")) {
+                this.authManager.setAuthorize(false);
+                const notes = Array.from(document.getElementsByClassName("addedNote")) as HTMLElement[];
+                StorageService.clearToken();
+                this.UImanager.signedOutMode();
+                this.noteList.clearNotes(notes);
             }
 
             if(parentDiv)

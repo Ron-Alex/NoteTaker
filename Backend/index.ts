@@ -71,31 +71,10 @@ app.get("/notes/:curID", verifyToken, async (req: any, res: any) => notesContr.g
 app.post('/notes', verifyToken, async (req: any, res: any) => notesContr.make_note(req, res, db));
 
 //DELETE REQUEST TO DELETE A NOTE: pass in ID as parameter and it will be deleted
-app.delete('/notes/:curID', async(req: any, res: any) => {
-    const { curID } = req.params;
-    try{
-        await db('notestorage').where('storedid', curID).del();
-        res.status(200).send({message: "Note has been deleted"});
-    } catch(err){
-        res.status(500).send(err);
-    }
-}) 
-
+app.delete('/notes/:curID', verifyToken, async (req: any, res: any) => notesContr.delete_note(req, res, db));
 
 //PUT REQUEST TO EDIT NOTE: pass in ID as parameter, content and editeddate in body.
-app.put('/notes/:curID', async(req: any, res: any) => {
-    const { curID } = req.params;
-    const {content, editeddate } = req.body;
-    try {
-        await db('notestorage').where('storedid', curID).update({
-            content: content,
-            editeddate: editeddate
-        });
-        res.status(200).send({message: "Note has been updated"});
-    } catch (error) {
-        res.status(500).send({error: "Could not edit note"});
-    }
-})
+app.put('/notes/:curID', async(req: any, res: any) => notesContr.edit_note(req, res, db) )
 
 app.post("/register", async (req: any, res: any) => {
     const {username, email, password } = req.body;

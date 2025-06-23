@@ -11,7 +11,6 @@ export class NoteService {
             created: new Date(),
             edited: new Date()
         }
-        console.log(note);
         DBStorage.add_Note(note);
         return note;
     }

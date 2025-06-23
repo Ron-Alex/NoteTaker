@@ -159,5 +159,10 @@ p{
     z-index: 1000;
 }
 
+#displayWarning{
+    color: crimson;
+    width: fit-content;
+}
+
 /* ========== Buttons ========== */
 /* Assume your .bodyButton is in btnStyles.css */

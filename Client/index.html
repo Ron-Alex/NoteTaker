@@ -20,7 +20,9 @@
                         <input class="themeToggle checkbox" type="checkbox" value="0">
                         <span class="slider"></span>
                     </label>
-                    <button id="signInButton" class="bodyButton">Sign In</button>
+                    <div id="signInDiv">
+                        <button id="signInButton" class="bodyButton">Sign In</button>
+                    </div>
                 </div>
             </div>
             <div class="mainBody">
@@ -42,6 +44,9 @@
                 </div>
                 <div class="field">
                     <input placeholder="Password" id="signin_password_field" class="textInput" type="password">
+                </div>
+                <div>
+                    <p id="displayWarning" class="display-none">Email or Password is incorrect</p>
                 </div>
                 <div class="btn">
                     <button type="button" id="signInCancelButton" class="button1 bodyButton">Cancel</button>

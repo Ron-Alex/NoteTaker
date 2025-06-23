@@ -4,6 +4,7 @@ import { NoteEditor } from "../Editor/NoteEditor.js";
 // import { StorageService } from "./StorageService.js";
 import { TempEditor } from "../Editor/TempEditor.js";
 import { ElementMananger } from "./ElementManager.js";
+import { AuthManager } from "../services/AuthManager.js";
 import { Note } from "../models/Note.js";
 
 type Mode = "viewMode" | "insertMode" | "editorMode";
@@ -12,15 +13,18 @@ export class UIManager{
 
     private currentEditor: NoteEditor | null = null;
     private mode: Mode = "viewMode";
+    private authMode: string = "signedOut";
     private tempEditor = new TempEditor;
     private elementManager = new ElementMananger;
+    private authManager = new AuthManager;
     contentEditable: boolean = true;
 
     private buttons = {
         submit: null as HTMLElement | null,
         cancel: null as HTMLElement | null,
         accept: null as  HTMLElement | null,
-        delete: null as HTMLElement | null
+        delete: null as HTMLElement | null,
+        signOut: null as HTMLElement | null
     }
     
     private addButton: HTMLElement | null = null;
@@ -33,6 +37,7 @@ export class UIManager{
 
     constructor() {
         this.initialize();
+        this.initAuthMode();
     }
 
     private initialize(): void{
@@ -45,6 +50,15 @@ export class UIManager{
         this.buttons.cancel = this.elementManager.makeButton("Cancel", "cancelButton");
         this.buttons.accept = this.elementManager.makeButton("Accept", "acceptButton");
         this.buttons.delete = this.elementManager.makeButton("Delete Note", "deleteButton");
+        this.buttons.signOut = this.elementManager.makeButton("Sign Out", "signOutButton");
+    }
+
+    async initAuthMode(){
+        await this.authManager.init();
+        const auth = this.authManager.getAuthorized();
+        if(auth) this.signedInMode();
+        else this.signedOutMode();
+
     }
 
     makeButtonArea(): void{
@@ -73,7 +87,7 @@ export class UIManager{
         overlay?.classList.toggle("display-none");
     }
 
-    signInModalViewToggle(){
+    signInModalViewToggle(){    
         const signInModal = document.querySelector("#signInModal");
         signInModal?.classList.toggle("display-none");
     }
@@ -82,6 +96,41 @@ export class UIManager{
         const registerModal = document.querySelector("#registerModal");
         registerModal?.classList.toggle("display-none");
         this.signInModalViewToggle();
+    }
+
+    alertToggle(state: boolean){
+        const alert = document.querySelector("#displayWarning");
+        if(state) alert?.classList.remove("display-none");
+        else alert?.classList.add("display-none");
+    }
+
+    signedInMode(): void {
+        if(this.authMode === "signedIn"){
+            return;
+        }
+        this.authMode = "signedIn";
+        const signInDiv = document.querySelector("#signInDiv");
+        const signInButton = document.querySelector("#signInButton");
+        this.elementManager.killButton(signInButton as HTMLElement);
+        if(this.buttons.signOut){
+            signInDiv?.appendChild(this.buttons.signOut);
+        }
+    }
+
+    signedOutMode(): void{
+        if(this.authMode === "signedOut"){
+            return;
+        }
+        this.authMode = "signedOut";
+        if(this.buttons.signOut){
+            this.elementManager.killButton(this.buttons.signOut);
+        }
+        const signInButton = document.createElement("button");
+        signInButton.classList.add("bodyButton");
+        signInButton.id = "signInButton";
+        signInButton.textContent = "Sign In";
+        const signInDiv = document.querySelector("#signInDiv");
+        signInDiv?.appendChild(signInButton);
     }
 
     insertMode(): void{
@@ -178,11 +227,9 @@ export class UIManager{
     //Queries all addedNotes, turns them into a HTMLCollection, and loops through them checking for the input string.
     //If !found, sets the style to none
     searchMode(searchedText: string): void{
-        console.log("Called");
         const allNotes = document.getElementsByClassName("addedNote") as HTMLCollectionOf<HTMLElement>;
         const lowerCaseSearch = searchedText.toLowerCase();
         for(let i = 0; i < allNotes.length; i++){
-            console.log("Looped");
             const lowerCaseNote = allNotes[i].textContent?.toLowerCase();
             const note = allNotes[i];
             if(!lowerCaseNote?.includes(lowerCaseSearch))

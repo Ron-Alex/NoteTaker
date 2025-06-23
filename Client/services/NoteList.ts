@@ -14,6 +14,12 @@ export class NoteList{
         noteDiv.remove();
     }
 
+    clearNotes(notes: HTMLElement[]): void{
+        for(let item of notes) {
+            item.remove();
+        }
+    }
+
     render(notes: Note[]): void{
         this.noteContainer.innerHTML = '';
         notes.forEach(note => this.renderNote(note));

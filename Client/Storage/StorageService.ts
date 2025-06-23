@@ -29,5 +29,9 @@ export class StorageService{
     static getToken(): string | null{
         return localStorage.getItem(this.TOKEN_KEY);
     }
+
+    static clearToken(): void{
+        localStorage.removeItem(this.TOKEN_KEY);
+    }
 }
  
