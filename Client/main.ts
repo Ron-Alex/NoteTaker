@@ -50,7 +50,17 @@ import { AuthManager } from "./services/AuthManager.js";
                     return;
                 }
                 const newNoteObj = this.UImanager.returnEditorObject();
-                const newNote = this.noteService.addNote(newNoteObj);
+                const newNote = this.noteService.makeNote(newNoteObj);
+                if(this.authManager.getAuthorized())
+                {
+                    DBStorage.add_Note(newNote);
+                }
+                else {
+                    let notes = StorageService.loadNote();
+                    if(!notes) notes = [];
+                    notes.push(newNote);
+                    StorageService.setNote(notes);
+                }
                 this.noteList.renderNote(newNote);
                 this.UImanager.viewMode();
             }
@@ -64,7 +74,12 @@ import { AuthManager } from "./services/AuthManager.js";
             {
                 this.UImanager.viewMode();
                 const noteToBeDel = this.UImanager.noteChange;
-                this.noteService.deleteNote(noteToBeDel);
+                if(this.authManager.getAuthorized()){
+                    this.noteService.deleteDBNote(noteToBeDel);
+                }
+                else{
+                    this.noteService.deleteLSNote(noteToBeDel);
+                }
                 const selectedNote = document.querySelector(`[data-id="${noteToBeDel}"]`);
                 if(selectedNote)
                 this.noteList.deleteNoteDiv(selectedNote as HTMLDivElement);
@@ -78,7 +93,13 @@ import { AuthManager } from "./services/AuthManager.js";
                 const selectedNote = document.querySelector(`[data-id="${noteToBeEdited}"]`);
                 if(selectedNote)
                 selectedNote.innerHTML = this.UImanager.returnEditorHTML();
-                DBStorage.edit_Note(editedNote, new Date(), noteToBeEdited);
+                if(this.authManager.getAuthorized())
+                {
+                    DBStorage.edit_Note(editedNote, new Date(), noteToBeEdited);
+                }
+                else{
+                    this.noteService.editNote(editedNote, new Date(), noteToBeEdited);
+                }
             }
 
             if(funcTarg.id === "signInButton" || funcTarg.id === "signInCancelButton"){

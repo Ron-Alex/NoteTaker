@@ -6,6 +6,7 @@ import { TempEditor } from "../Editor/TempEditor.js";
 import { ElementMananger } from "./ElementManager.js";
 import { AuthManager } from "../services/AuthManager.js";
 import { Note } from "../models/Note.js";
+import { StorageService } from "../Storage/StorageService.js";
 
 type Mode = "viewMode" | "insertMode" | "editorMode";
 
@@ -205,7 +206,20 @@ export class UIManager{
         let selected_Note_from_DB: Note | null = null;
         if(divID) {
             this.noteChange = divID;
-            selected_Note_from_DB = await DBStorage.get_curr_Note(divID);
+            if(this.authManager.getAuthorized())
+            {
+                selected_Note_from_DB = await DBStorage.get_curr_Note(divID);
+            }
+            else{
+                const notes = StorageService.loadNote();
+                const noteArr = Array.from(notes);
+                noteArr.forEach((note)=> {
+                    if(note.storedID === divID)
+                    {
+                        selected_Note_from_DB = note;
+                    }
+                })
+            }
         }
         clickedNote.textContent = '';
 
