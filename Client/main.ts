@@ -186,6 +186,7 @@ import { AuthManager } from "./services/AuthManager.js";
                 StorageService.clearToken();
                 this.UImanager.signedOutMode();
                 this.noteList.clearNotes(notes);
+                this.loadLSNotes();
             }
 
             if(parentDiv)
