@@ -20,12 +20,13 @@ import { AuthManager } from "./services/AuthManager.js";
         this.UImanager = new UIManager;
         this.authManager = new AuthManager;
         this.setUpEventListeners();
-        this.init();
+        this.init();    
     }
 
     async init(){
         await this.authManager.init();
         const authStatus = await this.authManager.getAuthorized();
+        console.log(authStatus);
         if(authStatus) this.loadDBNotes();
         else this.loadLSNotes();
     }

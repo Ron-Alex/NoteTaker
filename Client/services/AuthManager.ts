@@ -2,17 +2,19 @@ import { StorageService } from "../Storage/StorageService.js";
 
 export class AuthManager{
     private currentUser: string | null = null;
-    private authorized: boolean = false;
+    #authorized: boolean = false;
 
-    constructor(){
-        this.init();
-    }
+    // constructor(){
+    //     this.init();
+    // }
 
     async init(){
         const token = StorageService.getToken();
+        console.log(token);
         if(token){
             const valid = await this.initVerify(token);
-            if(valid) this.authorized = true;
+            console.log(valid);
+            if(valid) this.#authorized = true;
             else StorageService.clearToken();
         }
     }
@@ -25,7 +27,7 @@ export class AuthManager{
     }
 
     getAuthorized(): boolean{
-        return this.authorized;
+        return this.#authorized;
     }
 
     setUser(user_id: string): void{
@@ -33,14 +35,14 @@ export class AuthManager{
     }
 
     setAuthorize(status: boolean): void{
-        this.authorized = status;
+        this.#authorized = status;
     }
 
     setToken(token: string): void {
         StorageService.saveToken(token);
     }
 
-    async initVerify(token: string){
+    async initVerify(token: string): Promise<boolean>{
         const response = await fetch("http://localhost:4000/verify", {
             method: "get",
             headers: {
@@ -49,7 +51,8 @@ export class AuthManager{
             }
         })
         if(!response.ok) {
-            throw new Error("Token not verified");
+            return false;
+            // throw new Error("Token not verified");
         }
         return true;
     }

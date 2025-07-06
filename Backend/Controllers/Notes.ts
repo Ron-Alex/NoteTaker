@@ -1,4 +1,12 @@
-const get_all_notes = async (req: any, res: any, db: any) => {
+import { Request, Response } from "express";
+
+interface reqObject extends Request{
+    user: {
+        user_id: string
+    }
+}
+
+const get_all_notes = async (req: reqObject, res: Response, db: any) => {
     try{
         const notes = await db('notestorage').where({user_id: req.user.user_id}).orderBy('createddate', 'asc');
         res.status(200).send(notes);
@@ -8,7 +16,7 @@ const get_all_notes = async (req: any, res: any, db: any) => {
     }
 }
 
-const get_indiv_note = async (req: any, res: any, db: any) => {
+const get_indiv_note = async (req: reqObject, res: Response, db: any) => {
     const {curID} = req.params;
     try {   
         const note = await db('notestorage').where('storedid', curID).andWhere({user_id: req.user.user_id});
@@ -18,7 +26,7 @@ const get_indiv_note = async (req: any, res: any, db: any) => {
     }
 }
 
-const make_note = async (req: any, res: any, db: any) => {
+const make_note = async (req: reqObject, res: Response, db: any) => {
     const {storedid, content, createddate, editeddate} = req.body;
     try{
         await db('notestorage').insert({
@@ -34,7 +42,7 @@ const make_note = async (req: any, res: any, db: any) => {
     }
 }
 
-const delete_note = async (req: any, res: any, db: any) => {
+const delete_note = async (req: reqObject, res: Response, db: any) => {
     const {curID} = req.params;
     try{
         await db('notestorage').where('storedid', curID).andWhere({user_id: req.user.user_id}).del();
@@ -44,7 +52,7 @@ const delete_note = async (req: any, res: any, db: any) => {
     }
 }
 
-const edit_note = async (req: any, res: any, db: any) => {
+const edit_note = async (req: reqObject, res: Response, db: any) => {
     const { curID } = req.params;
     const {content, editeddate } = req.body;
     try {
