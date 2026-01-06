@@ -1,6 +1,6 @@
 # 📝 Custom Note-Taking App (Frontend)
 
-A simple, lightweight note-taking web app built using **Vanilla JavaScript** with **TypeScript**. Fully client-side, no frameworks.
+A simple, lightweight note-taking web app built using **Vanilla TypeScript**. Fully client-side, no frameworks.
 
 ## 🚀 Features
 
